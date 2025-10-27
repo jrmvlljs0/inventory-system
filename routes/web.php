@@ -21,6 +21,6 @@ Route::middleware('auth')->group(function () {
 });
 
 // Product routes use for fetching and displaying products
-//Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.show');
+Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
 
 require __DIR__.'/auth.php';

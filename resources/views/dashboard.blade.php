@@ -26,7 +26,7 @@
                                 <tr>
                                     <td>{{ $product->id }}</td>
                                     <td>
-                                        <a href="{{ route('products.show', $product->id) }}">
+                                        <a href="{{ route('products.index', $product->id) }}">
                                             {{ $product->name }}
                                         </a>
                                     </td>
