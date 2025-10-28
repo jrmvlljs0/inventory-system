@@ -31,8 +31,12 @@
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Description</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Actions</th>
                                 </tr>
                             </thead>
+
                             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                                 @forelse($products as $product)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -50,6 +54,20 @@
                                             {{ $product->sku }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                             {{ $product->description }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            <a href="{{ route('products.show', $product->id) }}"
+                                                class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2">Show</a>
+                                            <a href="{{ route('products.edit', $product->id) }}"
+                                                class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2">Edit</a>
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                class="inline-block"
+                                                onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>

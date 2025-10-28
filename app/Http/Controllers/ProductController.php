@@ -40,33 +40,31 @@ class ProductController extends Controller
     }
 
     //display the specified product
-    public function show(Product $products)
+    public function show(Product $product)
     {
-        //
-        return view('products.show', compact('products'));
+        return view('products.show', compact('product'));
     }
 
     //show the form for editing the specified product
-    public function edit(Product $products)
+    public function edit(Product $product)
     {
-        //
-         return view('products.edit', compact('products'));
+        return view('products.edit', compact('product'));
     }
-    public function update(Request $request, Product $products)
+
+    public function update(Request $request, Product $product)
     {
-        //
-         $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|max:100|unique:products,sku',
+            'sku' => 'required|string|max:100|unique:products,sku,' . $product->id,
             'description' => 'nullable|string',
         ]);
 
         $product->update($request->all());
-        return redirect()->route('products.index')->with('success', 'Product upadated successfully.');
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
-    public function destroy(Product $products)
+
+    public function destroy(Product $product)
     {
-        //
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
