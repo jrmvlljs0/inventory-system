@@ -13,6 +13,16 @@ class Product extends Model
             'name',
             'sku',
             'description',
+            'is_active'
         ];
+
+        public function stockMovements()
+        {
+            return $this->hasMany(StockMovement::class);
+        }
+        public function getStockQuantityAttribute()
+        {
+            return $this->stockMovements()->sum('quantity');
+        }
 
 }
