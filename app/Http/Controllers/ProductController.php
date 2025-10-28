@@ -24,12 +24,6 @@ class ProductController extends Controller
     //Store a newly created product in storage
     public function store (Request $request)
     {
-        //validate and store the new product
-        // $validated = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'sku' => 'required|string|max:100|unique:products,sku',
-        //     'description' => 'nullable|string',
-        // ]);
         $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|max:100|unique:products,sku',

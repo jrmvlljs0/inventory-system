@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductStockController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Product;
+use App\Models\StockMovement;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,8 +16,12 @@ Route::get('/dashboard', function () {
     $totalProducts = Product::count();
     $activeProducts = Product::where('is_active', true)->count();
     $inactiveProducts = Product::where('is_active', false)->count();
+
+    $totalStock = StockMovement::count();
+    $totalActiveStock = StockMovement::where('quantity', '>', 0)->count();
+    $totalInactiveStock = StockMovement::where('quantity', '<', 0)->count();
     
-    return view('dashboard', compact('products', 'totalProducts', 'activeProducts', 'inactiveProducts'));
+    return view('dashboard', compact('products', 'totalProducts', 'activeProducts', 'inactiveProducts', 'totalStock', 'totalActiveStock', 'totalInactiveStock'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

@@ -21,7 +21,7 @@
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium mb-1">Product Name</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('name') ring-red-500 @else ring-blue-300 @enderror">
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('name') @else ring-blue-300 @enderror">
                             @error('name')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -29,7 +29,7 @@
                         <div class="mb-4">
                             <label for="sku" class="block text-sm font-medium mb-1">SKU</label>
                             <input type="text" id="sku" name="sku" value="{{ old('sku') }}"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('sku') ring-red-500 @else ring-blue-300 @enderror">
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('sku') @else ring-blue-300 @enderror">
                             @error('sku')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -37,7 +37,7 @@
                         <div class="mb-4">
                             <label for="description" class="block text-sm font-medium mb-1">Description</label>
                             <textarea id="description" name="description" rows="4"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('description') ring-red-500 @else ring-blue-300 @enderror">{{ old('description') }}</textarea>
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('description') @else ring-blue-300 @enderror">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror

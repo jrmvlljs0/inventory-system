@@ -11,22 +11,40 @@
     
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class=" bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class=" p-6 text-gray-900 dark:text-gray-100">
-                    <h2 class="text-2xl font-semibold mb-4">Dashboard</h2>
+            <div class=" overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-gray-800 p-6">
+                    <h1 class="text-xl font-semibold mb-4 dark:text-gray-100">Available Products</h1>
 
                     <div class="flex justify-between gap-4  grid-cols-1 md:grid-cols-3">
-                        <div class="bg-blue-500 text-white rounded-lg p-6 shadow-md">
-                            <h3 class="text-lg font-medium mb-2">Total Products</h3>
-                            <p class="text-3xl font-bold"><?php echo e($totalProducts); ?></p>
+                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
+                            <h2 class="text-lg font-medium mb-2">Total Products</h2>
+                            <p class="text-4xl font-bold"><?php echo e($totalProducts); ?></p>
                         </div>
-                        <div class="bg-green-500 text-white rounded-lg p-6 shadow-md">
-                            <h3 class="text-lg font-medium mb-2">Active Products</h3>
+                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
+                            <h2 class="text-lg font-medium mb-2">Active Products</h2>
                             <p class="text-3xl font-bold"><?php echo e($activeProducts); ?></p>
                         </div>
-                        <div class="bg-yellow-500  text-white rounded-lg p-6 shadow-md">
-                            <h3 class="text-lg font-medium mb-2">Inactive Products</h3>
-                            <p class="text-3xl font-bold"><?php echo e($inactiveProducts); ?></p>
+                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full h-auto">
+                            <h2 class="text-lg font-medium mb-2">Inactive Products</h2>
+                            <p class="text-4xl font-bold"><?php echo e($inactiveProducts); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-6">
+                    <h1 class="text-xl font-semibold mb-4 dark:text-gray-100">Available Stock</h1>
+
+                    <div class="flex justify-between gap-4  grid-cols-1 md:grid-cols-3">
+                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
+                            <h2 class="text-lg font-medium mb-2">Total Products</h2>
+                            <p class="text-4xl font-bold"><?php echo e($totalStock); ?></p>
+                        </div>
+                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
+                            <h2 class="text-lg font-medium mb-2">Active Products</h2>
+                            <p class="text-3xl font-bold"><?php echo e($totalActiveStock); ?></p>
+                        </div>
+                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full h-auto">
+                            <h2 class="text-lg font-medium mb-2">Inactive Products</h2>
+                            <p class="text-4xl font-bold"><?php echo e($totalInactiveStock); ?></p>
                         </div>
                     </div>
                 </div>

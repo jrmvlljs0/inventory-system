@@ -14,11 +14,12 @@
                         <a href="{{ route('stock.index') }}"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Back</a>
                     </div>
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <div class="p-6">
                         <div class="mb-4">
-                            <label for="product_id" class="block text-sm font-medium mb-1">Select Product</label>
+                            <label for="product_id" class="block text-sm font-medium mb-1 text-white">Select
+                                Product</label>
                             <select id="product_id" name="product_id"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('product_id') ring-red-500 @else ring-blue-300 @enderror">
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('product_id')  @else ring-blue-300 @enderror">
                                 <option value="">-- Select Product --</option>
                                 @foreach ($products as $product)
                                     <option value="{{ $product->id }}"
@@ -32,17 +33,18 @@
                             @enderror
                         </div>
                         <div class="mb-4">
-                            <label for="quantity" class="block text-sm font-medium mb-1">Quantity</label>
+                            <label for="quantity" class="block text-sm font-medium mb-1 text-white">Quantity</label>
                             <input type="number" id="quantity" name="quantity" value="{{ old('quantity') }}"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('quantity') ring-red-500 @else ring-blue-300 @enderror">
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('quantity')  @else ring-blue-300 @enderror">
                             @error('quantity')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-4">
-                            <label for="type" class="block text-sm font-medium mb-1">Movement Type</label>
+                            <label for="type" class="block text-sm font-medium mb-1 text-white">Movement
+                                Type</label>
                             <select id="type" name="type"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('type') ring-red-500 @else ring-blue-300 @enderror">
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('type')  @else ring-blue-300 @enderror">
                                 <option value="">-- Select Type --</option>
                                 <option value="addition" {{ old('type') == 'addition' ? 'selected' : '' }}>Add Stock
                                 </option>
@@ -54,15 +56,15 @@
                             @enderror
                         </div>
                         <div class="mb-4">
-                            <label for="reason" class="block text-sm font-medium mb-1">Reason</label>
+                            <label for="reason" class="block text-sm font-medium mb-1 text-white">Reason</label>
                             <input type="text" id="reason" name="reason" value="{{ old('reason') }}"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('reason') ring-red-500 @else ring-blue-300 @enderror">
+                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('reason')  @else ring-blue-300 @enderror">
                             @error('reason')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <p class="text-white text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
-                        <button type="submit"
-                            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Update Stock</button>
+                        <button type="submit" class="px-4 py-2 text-white rounded">Update
+                            Stock</button>
                     </div>
                 </form>
             </div>
