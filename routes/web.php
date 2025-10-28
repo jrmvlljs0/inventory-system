@@ -10,7 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $products = Product::all();
+    $products = Product::latest()->paginate(10);
     return view('dashboard', compact('products'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -21,6 +21,13 @@ Route::middleware('auth')->group(function () {
 });
 
 // Product routes use for fetching and displaying products
-Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+// Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+// Route::get('/products/create', [App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
+// Route::post('/products', [App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
+// Route::get('/products/{product}', [App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
+// Route::get('/products/{product}/edit', [App\Http\Controllers\ProductController::class, 'edit'])->name('products.edit');
+// Route::put('/products/{product}', [App\Http\Controllers\ProductController::class, 'update'])->name('products.update');
+// Route::delete('/products/{product}', [App\Http\Controllers\ProductController::class, 'destroy'])->name('products.destroy');
+Route::resource('products', ProductController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';

@@ -14,4 +14,62 @@ class ProductController extends Controller
         $products = Product::all();
         return view('products.index', compact('products'));
     }
+
+    //show the form for creating a new product
+    public function create()
+    {
+        return view('products.create');
+    }
+
+    //Store a newly created product in storage
+    public function store (Request $request)
+    {
+        //validate and store the new product
+        // $validated = $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'sku' => 'required|string|max:100|unique:products,sku',
+        //     'description' => 'nullable|string',
+        // ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'sku' => 'required|string|max:100|unique:products,sku',
+            'description' => 'nullable|string',
+        ]);
+        Product::create($request->all());
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+    }
+
+    //display the specified product
+    public function show(Product $products)
+    {
+        //
+        return view('products.show', compact('products'));
+    }
+
+    //show the form for editing the specified product
+    public function edit(Product $products)
+    {
+        //
+         return view('products.edit', compact('products'));
+    }
+    public function update(Request $request, Product $products)
+    {
+        //
+         $request->validate([
+            'name' => 'required|string|max:255',
+            'sku' => 'required|string|max:100|unique:products,sku',
+            'description' => 'nullable|string',
+        ]);
+
+        $product->update($request->all());
+        return redirect()->route('products.index')->with('success', 'Product upadated successfully.');
+    }
+    public function destroy(Product $products)
+    {
+        //
+        $product->delete();
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+    }
+    
 }
+

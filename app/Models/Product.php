@@ -7,15 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    // public functions productTable()
-    // {
-    //    Schema::create('products', function (Blueprint $table) {
-    //        $table->id();
-    //        $table->string('name');
-    //        $table->string('sku')->unique();
-    //        $table->text('description')->nullable();
-    //    });
-    // }
         use HasFactory;
 
         protected $fillable = [
@@ -23,4 +14,5 @@ class Product extends Model
             'sku',
             'description',
         ];
+
 }
