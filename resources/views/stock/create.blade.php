@@ -11,7 +11,7 @@
                     @csrf
                     <div class="flex justify-between items-center mb-4 p-4">
                         <h2 class="mb-4 text-lg text-white font-semibold">Add New Stock</h2>
-                        <a href="{{ route('dashboard') }}"
+                        <a href="{{ route('stock.index') }}"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Back</a>
                     </div>
                     <div class="p-6 text-gray-900 dark:text-gray-100">

@@ -12,8 +12,8 @@
                 </div> --}}
                 <form action="{{ route('products.store') }}" method="POST">
                     @csrf
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="mb-4 text-lg font-semibold">Add New Product</h2>
+                    <div class="flex justify-between p-6 items-center mb-4">
+                        <h2 class="mb-4 text-lg text-white font-semibold">Add New Product</h2>
                         <a href="{{ route('products.index') }}"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Back</a>
                     </div>
