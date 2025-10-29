@@ -23,19 +23,28 @@
                                 <tr>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        ID</th>
+                                        ID
+                                    </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Name</th>
+                                        Name
+                                    </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        SKU</th>
+                                        SKU
+                                    </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Description</th>
+                                        Description
+                                    </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Actions</th>
+                                        Quantity
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Actions
+                                    </th>
                                 </tr>
                             </thead>
 
@@ -52,9 +61,14 @@
                                         </td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                            {{ $product->sku }}</td>
+                                            {{ $product->sku }}
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                            {{ $product->description }}</td>
+                                            {{ $product->description }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                                            {{ $product->stock_quantity }}
+                                        </td>
                                         <td class="px-12 py-4 whitespace-nowrap text-sm">
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="px-3 py-1  text-white rounded  mr-2 bg-blue-500">Show</a>
