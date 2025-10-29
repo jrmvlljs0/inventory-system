@@ -12,16 +12,20 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $products = Product::latest()->paginate(10);
-    $totalProducts = Product::count();
-    $activeProducts = Product::where('is_active', true)->count();
-    $inactiveProducts = Product::where('is_active', false)->count();
-
-    $totalStock = StockMovement::count();
-    $totalActiveStock = StockMovement::where('quantity', '>', 0)->count();
-    $totalInactiveStock = StockMovement::where('quantity', '<', 0)->count();
     
-    return view('dashboard', compact('products', 'totalProducts', 'activeProducts', 'inactiveProducts', 'totalStock', 'totalActiveStock', 'totalInactiveStock'));
+    //fetch latest products with pagination
+    $products = Product::latest()->paginate(10);
+
+    //count total products
+    $totalProducts = Product::count();
+
+    //count active and inactive products
+    $activeProducts = Product::where('is_active', true)->count();
+
+    //sum the quantity column in stock movements table
+    $totalStock = StockMovement::sum('quantity');
+    
+    return view('dashboard', compact('products','totalProducts', 'activeProducts', 'totalStock'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -37,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/stock', [ProductStockController::class, 'index'])->name('stock.index');
     Route::get('/stock/create', [ProductStockController::class, 'create'])->name('stock.create');
     Route::post('/stock/create', [ProductStockController::class, 'store'])->name('stock.store');
+    Route::get('/stock/{stockMovement}/edit', [ProductStockController::class, 'edit'])->name('stock.edit');
+    Route::put('/stock/{stockMovement}', [ProductStockController::class, 'update'])->name('stock.update');
 });
 
 require __DIR__.'/auth.php';

@@ -1,9 +1,4 @@
 <x-app-layout>
-    {{-- <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot> --}}
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -29,41 +24,26 @@
                                 @endforeach
                             </select>
                             @error('product_id')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <p class="text-white text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-4">
                             <label for="quantity" class="block text-sm font-medium mb-1 text-white">Quantity</label>
                             <input type="number" id="quantity" name="quantity" value="{{ old('quantity') }}"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('quantity')  @else ring-blue-300 @enderror">
+                                step="1" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring">
                             @error('quantity')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div class="mb-4">
-                            <label for="type" class="block text-sm font-medium mb-1 text-white">Movement
-                                Type</label>
-                            <select id="type" name="type"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('type')  @else ring-blue-300 @enderror">
-                                <option value="">-- Select Type --</option>
-                                <option value="addition" {{ old('type') == 'addition' ? 'selected' : '' }}>Add Stock
-                                </option>
-                                <option value="removal" {{ old('type') == 'removal' ? 'selected' : '' }}>Remove Stock
-                                </option>
-                            </select>
-                            @error('type')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <p class="text-white text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-4">
                             <label for="reason" class="block text-sm font-medium mb-1 text-white">Reason</label>
-                            <input type="text" id="reason" name="reason" value="{{ old('reason') }}"
-                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('reason')  @else ring-blue-300 @enderror">
+                            <textarea id="reason" name="reason" rows="4"
+                                class="text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring">{{ old('reason') }}</textarea>
                             @error('reason')
                                 <p class="text-white text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
-                        <button type="submit" class="px-4 py-2 text-white rounded">Update
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Add
                             Stock</button>
                     </div>
                 </form>
