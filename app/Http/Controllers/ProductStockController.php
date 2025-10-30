@@ -79,6 +79,8 @@ class ProductStockController extends Controller
         return redirect()->route('stock.index')->with('success', 'Stock movement updated successfully.');
     }
 
+    
+
      //DELETE FUNCTION - To delete the specified stocks in inventory
     public function destroy(StockMovement $stockMovement)
     {

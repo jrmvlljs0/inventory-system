@@ -16,7 +16,9 @@ Route::get('/dashboard', function () {
     //fetch latest products with pagination
     $products = Product::latest()->paginate(10);
 
-
+    $stockMovements = StockMovement::with('product')
+    ->latest()
+    ->paginate(10);
 
     //count total products
     $totalProducts = Product::count();
@@ -28,7 +30,7 @@ Route::get('/dashboard', function () {
     $totalStock = StockMovement::sum('quantity');
     
     //return to dashboard view with the data passed to it
-    return view('dashboard', compact('products','totalProducts', 'activeProducts', 'totalStock'));
+    return view('dashboard', compact('products','totalProducts', 'activeProducts', 'totalStock','stockMovements'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
