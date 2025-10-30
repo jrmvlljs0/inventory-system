@@ -4,8 +4,10 @@
             <div class=" text-gray-900 dark:text-gray-100">
                 <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     @if (session('success'))
-                        <div class="bg-green-500 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
+                        <div class="  px-4 py-3 rounded relative mb-4" role="alert">
+                            <x-bladewind::alert type="success" shade="dark">
+                                {{ session('success') }}
+                            </x-bladewind::alert>
                         </div>
                     @endif
 
@@ -66,10 +68,39 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             {{ $movement->reason }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            <a href="{{ route('stock.edit', $movement) }}"
-                                                class="px-3 py-1  text-white rounded  mr-2 bg-green-500">
-                                                Edit</a>
+                                        <td class="flex gap-2 px-6 py-4 whitespace-nowrap text-sm">
+                                            <x-bladewind::button tag="a"
+                                                href="{{ route('stock.edit', $movement) }}"
+                                                class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                                color="green">
+                                                Edit
+                                            </x-bladewind::button>
+                                            <form action="{{ route('stock.destroy', $movement->id) }}" method="POST"
+                                                class="inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-bladewind::button type="button"
+                                                    onclick="showModal('confirmationModal')"
+                                                    class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                                    Delete
+                                                </x-bladewind::button>
+
+                                                <x-bladewind::modal title="Confirmation" name="confirmationModal"
+                                                    class="bg-gray-800" show_action_buttons="false">
+                                                    Are you sure you want to delete this product stocks?
+                                                    <div class="mt-4 flex justify-end">
+
+                                                        <button type="button" onclick="hideModal('confirmationModal')"
+                                                            class="px-4 py-2 bg-gray-800 text-white rounded mr-2 hover:bg-gray-600">
+                                                            Cancel
+                                                        </button>
+                                                        <button type="submit"
+                                                            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </x-bladewind::modal>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty

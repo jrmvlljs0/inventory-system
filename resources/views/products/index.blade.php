@@ -66,25 +66,50 @@
                                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                             {{ $product->description }}
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                                        <td
+                                            class="{{ $product->stock_quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold' }}">
                                             {{ $product->stock_quantity }}
                                         </td>
-                                        <td class="px-12 py-4 whitespace-nowrap text-sm">
-                                            <a href="{{ route('products.show', $product->id) }}"
-                                                class="px-3 py-1  text-white rounded  mr-2 bg-blue-500">Show</a>
+                                        <td class="flex gap-2 px-12 py-4 whitespace-nowrap text-sm">
 
-                                            <a href="{{ route('products.edit', $product->id) }}"
-                                                class="px-3 py-1  text-white rounded  mr-2 bg-green-500">Edit
-                                            </a>
+                                            <x-bladewind::button tag="a"
+                                                href="{{ route('products.show', $product->id) }}"
+                                                class="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                                Show
+                                            </x-bladewind::button>
+
+                                            <x-bladewind::button tag="a"
+                                                href="{{ route('products.edit', $product->id) }}"
+                                                class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                                color="green">
+                                                Edit
+                                            </x-bladewind::button>
+
                                             <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                                class="inline-block"
-                                                onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                class="inline-block">
                                                 @csrf
                                                 @method('DELETE')
+                                                <x-bladewind::button type="button"
+                                                    onclick="showModal('confirmationModal')"
+                                                    class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                                    Delete
+                                                </x-bladewind::button>
 
-                                                <button type="submit"
-                                                    class="flex px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
-                                                    Delete</button>
+                                                <x-bladewind::modal title="Confirmation" name="confirmationModal"
+                                                    class="bg-gray-800" show_action_buttons="false">
+                                                    Are you sure you want to delete this product?
+                                                    <div class="mt-4 flex justify-end">
+
+                                                        <button type="button" onclick="hideModal('confirmationModal')"
+                                                            class="px-4 py-2 bg-gray-800 text-white rounded mr-2 hover:bg-gray-600">
+                                                            Cancel
+                                                        </button>
+                                                        <button type="submit"
+                                                            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </x-bladewind::modal>
                                             </form>
                                         </td>
                                     </tr>
