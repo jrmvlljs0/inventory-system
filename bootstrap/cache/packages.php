@@ -27,13 +27,6 @@
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
     ),
   ),
-  'mkocansey/bladewind' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Mkocansey\\Bladewind\\BladewindServiceProvider',
-    ),
-  ),
   'nesbot/carbon' => 
   array (
     'providers' => 

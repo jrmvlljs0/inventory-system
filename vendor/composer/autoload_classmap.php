@@ -2962,7 +2962,6 @@ return array(
     'League\\Uri\\UriTemplate\\TemplateCanNotBeExpanded' => $vendorDir . '/league/uri/UriTemplate/TemplateCanNotBeExpanded.php',
     'League\\Uri\\UriTemplate\\VarSpecifier' => $vendorDir . '/league/uri/UriTemplate/VarSpecifier.php',
     'League\\Uri\\UriTemplate\\VariableBag' => $vendorDir . '/league/uri/UriTemplate/VariableBag.php',
-    'Mkocansey\\Bladewind\\BladewindServiceProvider' => $vendorDir . '/mkocansey/bladewind/src/BladewindServiceProvider.php',
     'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
     'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
     'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',

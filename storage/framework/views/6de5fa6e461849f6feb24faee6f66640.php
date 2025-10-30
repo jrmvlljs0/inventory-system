@@ -11,9 +11,7 @@
     <!-- Fonts -->
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="<?php echo e(asset('vendor/bladewind/css/animate.min.css')); ?>" rel="stylesheet" />
-    <link href="<?php echo e(asset('vendor/bladewind/css/bladewind-ui.min.css')); ?>" rel="stylesheet" />
-    <script src="<?php echo e(asset('vendor/bladewind/js/helpers.js')); ?>"></script>
+    
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
@@ -41,6 +39,7 @@
         </main>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
 </html>
 <?php /**PATH C:\Users\AIO Wireless\Documents\github\inventory-system\resources\views/layouts/app.blade.php ENDPATH**/ ?>

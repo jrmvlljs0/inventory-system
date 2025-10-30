@@ -18,8 +18,7 @@
                             <p class="text-4xl font-bold">{{ $totalStock }}</p>
                         </div>
                     </div>
-                    <div class="flex grid-cols-2 gap-4 py-6">
-                        <div class="bg-white text-black rounded-lg p-6 shadow-md w-full">
+                    {{-- <div class="bg-white text-black rounded-lg p-6 shadow-md w-full">
 
                             <x-bladewind::horizontal-line-graph label="Total Products "
                                 percentage="{{ $totalProducts }}" color="yellow" />
@@ -39,10 +38,10 @@
 
                             <x-bladewind::horizontal-line-graph label="Total Stocks " percentage="{{ $totalStock }}"
                                 color="blue" />
-                        </div>
-                    </div>
+                        </div> --}}
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </x-app-layout>

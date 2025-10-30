@@ -2551,62 +2551,6 @@
             "install-path": "../league/uri-interfaces"
         },
         {
-            "name": "mkocansey/bladewind",
-            "version": "v3.1.6",
-            "version_normalized": "3.1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mkocansey/bladewind.git",
-                "reference": "e5cd988893dd40a9349df11d1367f5a0c3051ec4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mkocansey/bladewind/zipball/e5cd988893dd40a9349df11d1367f5a0c3051ec4",
-                "reference": "e5cd988893dd40a9349df11d1367f5a0c3051ec4",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.0"
-            },
-            "time": "2025-10-27T12:35:17+00:00",
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Mkocansey\\Bladewind\\BladewindServiceProvider"
-                    ]
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Mkocansey\\Bladewind\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael K. Ocansey",
-                    "email": "mike@bladewindui.com"
-                }
-            ],
-            "description": "Laravel UI Components using TailwindCSS, Blade Templates and vanilla Javascript",
-            "keywords": [
-                "Ui Components",
-                "blade components",
-                "laravel",
-                "tailwindcss"
-            ],
-            "support": {
-                "issues": "https://github.com/mkocansey/bladewind/issues",
-                "source": "https://github.com/mkocansey/bladewind/tree/v3.1.6"
-            },
-            "install-path": "../mkocansey/bladewind"
-        },
-        {
             "name": "mockery/mockery",
             "version": "1.6.12",
             "version_normalized": "1.6.12.0",
