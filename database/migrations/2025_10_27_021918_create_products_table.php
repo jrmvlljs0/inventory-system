@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('sku')->unique();
             $table->text('description')->nullable();
             $table->timestamps();
+
+            // Indexes
+            $table->index('name');
+            $table->index('sku');
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 
