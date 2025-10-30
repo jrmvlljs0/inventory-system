@@ -31,14 +31,14 @@
                                 color="blue" />
                         </div>
                         <div class="bg-black text-white rounded-lg p-6 shadow-md w-full">
+                            <x-bladewind::horizontal-line-graph label="Total Products "
+                                percentage="{{ $totalProducts }}" color="yellow" />
 
-                            <x-bladewind::horizontal-line-graph label="Total Products " percentage="55"
-                                color="yellow" />
+                            <x-bladewind::horizontal-line-graph label="Active Products: "
+                                percentage="{{ $activeProducts }}" color="red" class="py-3" />
 
-                            <x-bladewind::horizontal-line-graph label="Active Products: " percentage="30" color="red"
-                                class="py-3" />
-
-                            <x-bladewind::horizontal-line-graph label="Total Stocks " percentage="15" color="blue" />
+                            <x-bladewind::horizontal-line-graph label="Total Stocks " percentage="{{ $totalStock }}"
+                                color="blue" />
                         </div>
                     </div>
                 </div>

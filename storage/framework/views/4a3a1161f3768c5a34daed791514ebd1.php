@@ -94,17 +94,16 @@
 <?php endif; ?>
                         </div>
                         <div class="bg-black text-white rounded-lg p-6 shadow-md w-full">
-
                             <?php if (isset($component)) { $__componentOriginal7666d208a986bb7934052694fe636d83 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7666d208a986bb7934052694fe636d83 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'bladewind::components.horizontal-line-graph','data' => ['label' => 'Total Products ','percentage' => '55','color' => 'yellow']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'bladewind::components.horizontal-line-graph','data' => ['label' => 'Total Products ','percentage' => ''.e($totalProducts).'','color' => 'yellow']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('bladewind::horizontal-line-graph'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Total Products ','percentage' => '55','color' => 'yellow']); ?>
+<?php $component->withAttributes(['label' => 'Total Products ','percentage' => ''.e($totalProducts).'','color' => 'yellow']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7666d208a986bb7934052694fe636d83)): ?>
@@ -118,14 +117,14 @@
 
                             <?php if (isset($component)) { $__componentOriginal7666d208a986bb7934052694fe636d83 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7666d208a986bb7934052694fe636d83 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'bladewind::components.horizontal-line-graph','data' => ['label' => 'Active Products: ','percentage' => '30','color' => 'red','class' => 'py-3']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'bladewind::components.horizontal-line-graph','data' => ['label' => 'Active Products: ','percentage' => ''.e($activeProducts).'','color' => 'red','class' => 'py-3']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('bladewind::horizontal-line-graph'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Active Products: ','percentage' => '30','color' => 'red','class' => 'py-3']); ?>
+<?php $component->withAttributes(['label' => 'Active Products: ','percentage' => ''.e($activeProducts).'','color' => 'red','class' => 'py-3']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7666d208a986bb7934052694fe636d83)): ?>
@@ -139,14 +138,14 @@
 
                             <?php if (isset($component)) { $__componentOriginal7666d208a986bb7934052694fe636d83 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7666d208a986bb7934052694fe636d83 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'bladewind::components.horizontal-line-graph','data' => ['label' => 'Total Stocks ','percentage' => '15','color' => 'blue']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'bladewind::components.horizontal-line-graph','data' => ['label' => 'Total Stocks ','percentage' => ''.e($totalStock).'','color' => 'blue']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('bladewind::horizontal-line-graph'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Total Stocks ','percentage' => '15','color' => 'blue']); ?>
+<?php $component->withAttributes(['label' => 'Total Stocks ','percentage' => ''.e($totalStock).'','color' => 'blue']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7666d208a986bb7934052694fe636d83)): ?>
