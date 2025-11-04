@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class=" text-gray-900 dark:text-gray-100">
+            <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     @if (session('success'))
                         <div class="flex items-center bg-green-500 text-white text-sm font-bold px-4 py-4 mb-4 rounded"
@@ -10,7 +10,7 @@
                         </div>
                     @endif
 
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center mb-4">
                         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                             {{ __('Stock Movements') }}
                         </h2>
@@ -19,6 +19,18 @@
                             Add Stock Movement
                         </a>
                     </div>
+                    <div class="mb-1">
+                        <form method="GET" action="{{ route('stock.index') }}">
+                            <div class="flex space-x-2">
+                                <input type="text" name="search" id="search" placeholder="Search products..."
+                                    value="{{ request('search') }}"
+                                    class="max-w-full text-white w-80 bg-gray-600 px-3 py-2 rounded-md border hover:border-white ">
+                                {{-- <button type="submit"
+                                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Search</button> --}}
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="overflow-x-auto py-4">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
@@ -50,7 +62,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                                 @forelse ($stockMovements as $movement)
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <tr class="text-white hover:bg-gray-50 dark:hover:bg-gray-700">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             {{ $movement->id }}
                                         </td>
@@ -61,7 +73,7 @@
                                             {{ $movement->product->name }}
                                         </td>
                                         <td
-                                            class="{{ $movement->quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold' }}">
+                                            class="px-8 py-4 whitespace-nowrap text-sm {{ $movement->quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold' }}">
                                             {{ $movement->quantity }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
@@ -139,3 +151,11 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', function() {
+        if (this.value === '') {
+            window.location.href = "{{ route('stock.index') }}";
+        }
+    });
+</script>

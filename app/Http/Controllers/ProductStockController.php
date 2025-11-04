@@ -10,15 +10,33 @@ class ProductStockController extends Controller
 {
 
     // Display a listing of the stock movements
-    public function index()
+    public function index(Request $request)
     {
+    
+         $query = StockMovement::with('product');
+
+         if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('product_id', 'like', "%{$search}%")
+              ->orWhere('quantity', 'like', "%{$search}%")
+              ->orWhereDate('created_at', $search)
+              ->orWhereDate('updated_at', $search);
+            });
+        }
+
+        $stockMovements = $query->latest()->paginate(10);
+
         //fetch stock movements with associated product data and paginate
-        $stockMovements = StockMovement::with('product')
-            ->latest()
-            ->paginate(10);
+        // $stockMovements = StockMovement::with('product')
+        //     ->latest()
+        //     ->paginate(10);
             
         return view('stock.index', compact('stockMovements'));
     }
+
+    
 
     //CREATE FUNCTION - To show the form for creating a new product in inventory
     public function create()

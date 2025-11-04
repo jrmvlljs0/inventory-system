@@ -1,8 +1,8 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white p-6 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     @if (session('success'))
                         <div class="flex items-center bg-green-500 text-white text-sm font-bold px-4 py-4 mb-4 rounded"
                             role="alert">
@@ -10,10 +10,23 @@
                         </div>
                     @endif
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold">Product List</h2>
+                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                            Product List
+                        </h2>
                         <a href="{{ route('products.create') }}"
                             class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Add New
                             Product</a>
+                    </div>
+                    <div class="mb-1">
+                        <form method="GET" action="{{ route('products.index') }}">
+                            <div class="flex space-x-2">
+                                <input type="text" name="search" id="search" placeholder="Search products..."
+                                    value="{{ request('search') }}"
+                                    class="max-w-full text-white w-80 bg-gray-600 px-3 py-2 rounded-md border hover:border-white ">
+                                {{-- <button type="submit"
+                                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Search</button> --}}
+                            </div>
+                        </form>
                     </div>
 
                     <div class="overflow-x-auto py-4">
@@ -53,16 +66,15 @@
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                             {{ $product->id }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <td class="px-6 py-4 whitespace-nowrap text-white text-sm">
                                             <a href="{{ route('products.show', $product->id) }}" class="">
                                                 {{ $product->name }}
                                             </a>
                                         </td>
-                                        <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
                                             {{ $product->sku }}
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                                        <td class="px-6 py-4 text-sm text-white">
                                             {{ $product->description }}
                                         </td>
                                         <td
@@ -126,29 +138,6 @@
                                                         </div>
                                                     </dialog>
                                                 </el-dialog>
-
-
-
-                                                {{-- <button type="submit" onclick="showModal('confirmationModal')"
-                                                    class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                                                    Delete
-                                                </button> --}}
-
-                                                {{-- <x-bladewind::modal title="Confirmation" name="confirmationModal"
-                                                    class="bg-gray-800" show_action_buttons="false">
-                                                    Are you sure you want to delete this product?
-                                                    <div class="mt-4 flex justify-end">
-
-                                                        <button type="button" onclick="hideModal('confirmationModal')"
-                                                            class="px-4 py-2 bg-gray-800 text-white rounded mr-2 hover:bg-gray-600">
-                                                            Cancel
-                                                        </button>
-                                                        <button type="submit"
-                                                            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </x-bladewind::modal> --}}
                                             </form>
                                         </td>
                                     </tr>
@@ -167,8 +156,17 @@
                         {{ $products->links() }}
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+    </div>
 </x-app-layout>
+
+<script>
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', function() {
+        if (this.value === '') {
+            window.location.href = "{{ route('products.index') }}";
+        }
+    });
+</script>

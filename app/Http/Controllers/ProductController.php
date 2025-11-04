@@ -9,11 +9,26 @@ class ProductController extends Controller
 {
     //Controller to handle Product related requests
     //INDEX FUNCTION - To display a listing of the products
-    public function index()
+    public function index(Request $request)
     {
-        //fetch products from the database with pagination
-        $products = Product::latest()->paginate(10);
 
+        $query = Product::query();
+
+        //check if there is a search query
+       if ($request->has('search') && !empty($request->search)) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('sku', 'like', "%{$search}%")
+              ->orWhereDate('created_at', $search)
+              ->orWhereDate('updated_at', $search);
+        });
+    }
+
+
+        //fetch products from the database with pagination
+         $products = $query->latest()->paginate(10);
         //return to the products index view with the products data
         return view('products.index', compact('products'));
     }
