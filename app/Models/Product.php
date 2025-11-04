@@ -16,7 +16,8 @@ class Product extends Model
             'name',
             'sku',
             'description',
-            'is_active'
+            'is_active',
+            'image',
         ];
 
         //define relationship to stock movements
