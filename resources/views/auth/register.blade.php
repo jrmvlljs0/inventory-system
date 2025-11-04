@@ -29,8 +29,8 @@
                                 class="block text-sm/6 font-medium text-gray-100">Email
                             </label>
                             <div class="mt-2">
-                                <input id="name" type="name" name="name" :value="old('name')" required
-                                    autocomplete="name"
+                                <input id="name" type="email" name="email" :value="old('email')" required
+                                    autocomplete="username"
                                     class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                             </div>
                         </div>
@@ -44,12 +44,13 @@
                                     class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                             </div>
                             <div class="flex items-center justify-between mt-2">
-                                <label for="password" class="block text-sm/6 font-medium text-gray-100">Confirm
+                                <label for="password_confirmation" :value="__('Confirm Password')"
+                                    class="block text-sm/6 font-medium text-gray-100">Confirm
                                     Password</label>
                             </div>
                             <div class="mt-2">
-                                <input id="password" type="password" name="password" required
-                                    autocomplete="current-password"
+                                <input id="password_confirmation" type="password_confirmation"
+                                    name="password_confirmation" required autocomplete="current-password"
                                     class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                             </div>
                         </div>
