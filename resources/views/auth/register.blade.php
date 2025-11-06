@@ -36,7 +36,8 @@
                         </div>
                         <div class="mt-2 mb-4">
                             <div class="flex items-center justify-between">
-                                <label for="password" class="block text-sm/6 font-medium text-gray-100">Password</label>
+                                <label class="block text-sm/6 font-medium text-gray-100" for="password"
+                                    :value="__('Password')">Password</label>
                             </div>
                             <div class="mt-2">
                                 <input id="password" type="password" name="password" required
@@ -49,8 +50,8 @@
                                     Password</label>
                             </div>
                             <div class="mt-2">
-                                <input id="password_confirmation" type="password_confirmation"
-                                    name="password_confirmation" required autocomplete="current-password"
+                                <input id="password_confirmation" type="password" name="password_confirmation" required
+                                    autocomplete="current-password"
                                     class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                             </div>
                         </div>
@@ -64,6 +65,10 @@
 
                     <p class="mt-2 text-center text-sm/6 text-gray-400">
                         Already have an account?
+                        <a class="underline text-sm text-indigo-400 hover:text-indigo-300  dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                            href="{{ url('/') }}">
+                            Login
+                        </a>
                         {{-- <a href="{{ route('/welcome') }}"
                             class="inline-block py-1.5 text-indigo-400 hover:text-indigo-300 ">
                             Login

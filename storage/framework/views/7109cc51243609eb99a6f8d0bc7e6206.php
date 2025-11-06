@@ -26,8 +26,7 @@
 
                 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
                     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-                        <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                            alt="Your Company" class="mx-auto h-10 w-auto" />
+                        
                         <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Sign in to your
                             account
                         </h2>
@@ -48,16 +47,10 @@
                             </div>
 
                             <div>
-                                <div class="flex items-center justify-between">
-                                    <label for="password"
-                                        class="block text-sm/6 font-medium text-gray-100">Password</label>
-                                    <div class="text-sm">
-                                        <a href="#"
-                                            class="font-semibold text-indigo-400 hover:text-indigo-300">Forgot
-                                            password?</a>
-                                    </div>
-                                </div>
                                 <div class="mt-2">
+                                    <label for="password" :value="__('Password')"
+                                        class="block text-sm/6 font-medium text-gray-100">Password
+                                    </label>
                                     <input id="password" type="password" name="password" required
                                         autocomplete="current-password"
                                         class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
@@ -70,14 +63,24 @@
                                     <?php echo e(__('Log in')); ?></button>
                             </div>
                         </form>
+                        <div class="mt-3">
 
-                        <p class="mt-10 text-center text-sm/6 text-gray-400">
-                            Not a member?
+                            <?php if(Route::has('password.request')): ?>
+                                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                                    href="<?php echo e(route('password.request')); ?>">
+                                    <?php echo e(__('Forgot your password?')); ?>
+
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        <p class="mt-5 text-center text-sm/6 text-gray-400">
+                            Don't have an account?
                             <a href="<?php echo e(route('register')); ?>"
                                 class="inline-block py-1.5 text-indigo-400 hover:text-indigo-300 ">
                                 Register
                             </a>
                         </p>
+
                     </div>
                 </div>
             </div>
