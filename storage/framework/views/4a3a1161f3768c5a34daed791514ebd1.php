@@ -29,11 +29,11 @@
                     </div>
                 </div>
             </div>
-            <div class="flex gap-2 max-w-7xl">
-                <div class="bg-gray-800 p-6 mt-2 rounded lg:rounded-lg shadow-sm w-full">
-                    <h2 class="text-xl font-semibold mb-4 text-white">Recent Stocks </h2>
+            <div class="flex gap-2">
+                <div class="bg-gray-800 px-2 p-2 mt-2 rounded lg:rounded-lg shadow-sm w-auto">
+                    <h2 class="text-xl p-2 font-semibold mb-4 text-white">Recent Stocks </h2>
                     <div class="overflow-x-auto py-4 rounded">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded">
+                        <table class="min-w-auto divide-y divide-gray-200 dark:divide-gray-700 rounded">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
                                     <th
