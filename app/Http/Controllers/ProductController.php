@@ -44,13 +44,13 @@ class ProductController extends Controller
     public function store (Request $request)
     {
         //validate the incoming request data
-        $request->validate([
+        $validatedStoreProduct = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|max:100|unique:products,sku',
             'description' => 'nullable|string',
         ]);
         //create the product record
-        Product::create($request->all());
+        Product::create($validatedStoreProduct);
 
         //redirect to products index with success message
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
@@ -75,13 +75,13 @@ class ProductController extends Controller
     {
 
         //validate the incoming request data
-        $request->validate([
+        $validatedProductUpdate = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|max:100|unique:products,sku,' . $product->id,
             'description' => 'nullable|string',
         ]);
         //update the product record
-        $product->update($request->all());
+        $product->update($validatedProductUpdate);
 
         //redirect to products index with success message
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');

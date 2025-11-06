@@ -7,15 +7,15 @@
                     <div class="flex justify-between gap-4  grid-cols-1 md:grid-cols-3">
                         <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
                             <h2 class="text-lg font-medium mb-2">Total Products</h2>
-                            <p class="text-4xl font-bold">{{ $totalProducts }}</p>
+                            <p class="text-4xl font-bold">{{ $dashboardData->totalProducts }}</p>
                         </div>
                         <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
                             <h2 class="text-lg font-medium mb-2">Active Products</h2>
-                            <p class="text-3xl font-bold">{{ $activeProducts }}</p>
+                            <p class="text-3xl font-bold">{{ $dashboardData->activeProducts }}</p>
                         </div>
                         <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
                             <h2 class="text-lg font-medium mb-2">Total Stock</h2>
-                            <p class="text-4xl font-bold">{{ $totalStock }}</p>
+                            <p class="text-4xl font-bold">{{ $dashboardData->totalStock }}</p>
                         </div>
                     </div>
                 </div>

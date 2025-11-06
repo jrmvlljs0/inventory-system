@@ -15,7 +15,7 @@ class ProductStockController extends Controller
     
          $query = StockMovement::with('product');
 
-         if ($request->filled('search')) {
+         if ($request->has('search')) {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
@@ -28,11 +28,6 @@ class ProductStockController extends Controller
 
         $stockMovements = $query->latest()->paginate(10);
 
-        //fetch stock movements with associated product data and paginate
-        // $stockMovements = StockMovement::with('product')
-        //     ->latest()
-        //     ->paginate(10);
-            
         return view('stock.index', compact('stockMovements'));
     }
 
@@ -54,14 +49,14 @@ class ProductStockController extends Controller
     public function store(Request $request)
     {
         // Validate the incoming request data 
-        $request->validate([
+        $validatedStockProduct = $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer',
             'reason' => 'required|string|max:255',
         ]);
 
         // Create the stock movement record
-        StockMovement::create($request->all());
+        StockMovement::create($validatedStockProduct);
 
         //redirect to stock index with success message
         return redirect()->route('stock.index')->with('success', 'Stock movement created successfully.');
@@ -84,14 +79,14 @@ class ProductStockController extends Controller
     {
 
         //validate the incoming request data
-        $request->validate([
+        $validatedStockProductUpdate = $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer',
             'reason' => 'required|string|max:255',
         ]);
 
         //update the stock movement record
-        $stockMovement->update($request->all());
+        $stockMovement->update($validatedStockProductUpdate);
 
         //redirect to stock index with success message
         return redirect()->route('stock.index')->with('success', 'Stock movement updated successfully.');
