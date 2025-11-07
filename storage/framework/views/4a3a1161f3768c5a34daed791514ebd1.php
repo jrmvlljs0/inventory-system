@@ -9,126 +9,102 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class=" overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="bg-gray-800 p-6">
+        <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-gray-800 p-4 sm:p-6">
                     <h1 class="text-xl font-semibold mb-4 dark:text-gray-100">Available Products</h1>
-                    <div class="flex justify-between gap-4  grid-cols-1 md:grid-cols-3">
-                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-100 text-black rounded-lg p-4 sm:p-6 shadow-md">
                             <h2 class="text-lg font-medium mb-2">Total Products</h2>
-                            <p class="text-4xl font-bold"><?php echo e($dashboardData->totalProducts); ?></p>
+                            <p class="text-3xl sm:text-4xl font-bold"><?php echo e($dashboardData->totalProducts); ?></p>
                         </div>
-                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
+                        <div class="bg-gray-100 text-black rounded-lg p-4 sm:p-6 shadow-md">
                             <h2 class="text-lg font-medium mb-2">Active Products</h2>
-                            <p class="text-3xl font-bold"><?php echo e($dashboardData->activeProducts); ?></p>
+                            <p class="text-3xl sm:text-4xl font-bold"><?php echo e($dashboardData->activeProducts); ?></p>
                         </div>
-                        <div class="bg-gray-100 text-black rounded-lg p-6 shadow-md w-full">
+                        <div class="bg-gray-100 text-black rounded-lg p-4 sm:p-6 shadow-md">
                             <h2 class="text-lg font-medium mb-2">Total Stock</h2>
-                            <p class="text-4xl font-bold"><?php echo e($dashboardData->totalStock); ?></p>
+                            <p class="text-3xl sm:text-4xl font-bold"><?php echo e($dashboardData->totalStock); ?></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <div class="bg-gray-800 px-2 p-2 mt-2 rounded lg:rounded-lg shadow-sm w-auto">
-                    <h2 class="text-xl p-2 font-semibold mb-4 text-white">Recent Stocks </h2>
-                    <div class="overflow-x-auto py-4 rounded">
-                        <table class="min-w-auto divide-y divide-gray-200 dark:divide-gray-700 rounded">
+
+            <!-- Tables Section -->
+            <div class="flex flex-col lg:flex-row gap-2 mt-2">
+                <!-- Recent Stocks Table -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-sm w-full lg:w-1/2">
+                    <h2 class="text-xl font-semibold mb-4 text-white">Recent Stocks</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Name
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        Name</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Reason
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        Reason</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Date
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        Date</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                                 <?php $__currentLoopData = $stockMovements; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $movement): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                            <?php echo e($movement->product->name); ?>
-
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                            <?php echo e($movement->reason); ?>
-
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                            <?php echo e($movement->created_at->format('Y-m-d H:i')); ?>
-
-                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                            <?php echo e($movement->product->name); ?></td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                            <?php echo e($movement->reason); ?></td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                            <?php echo e($movement->created_at->format('Y-m-d H:i')); ?></td>
                                     </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-6 mt-2 rounded lg:rounded-lg shadow-sm">
+
+
+                <!-- Low Stock Products Table -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-sm w-full lg:w-1/2">
                     <h2 class="text-xl font-semibold mb-4 text-white">Products Low in Stock</h2>
-                    <div class="overflow-x-auto py-4 rounded">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        ID
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        ID</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Name
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        Name</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        SKU
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        SKU</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Description
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        Description</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Quantity
-                                    </th>
+                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        Quantity</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                                 <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <?php if($product->stock_quantity < 10): ?>
                                         <tr>
+                                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                                <?php echo e($product->id); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                                <?php echo e($product->name); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                                <?php echo e($product->sku); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                                <?php echo e($product->description); ?></td>
                                             <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                                <?php echo e($product->id); ?>
-
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                                <?php echo e($product->name); ?>
-
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                                <?php echo e($product->sku); ?>
-
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                                <?php echo e($product->description); ?>
-
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm <?php echo e($product->stock_quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'); ?>">
+                                                class="px-4 py-3 text-sm <?php echo e($product->stock_quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'); ?>">
                                                 <?php echo e($product->stock_quantity); ?>
 
                                             </td>
