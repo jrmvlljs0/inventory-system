@@ -11,21 +11,8 @@ class ProductController extends Controller
     //INDEX FUNCTION - To display a listing of the products
     public function index(Request $request)
     {
-
+        
         $query = Product::query();
-
-        //check if there is a search query
-       if ($request->has('search') && !empty($request->search)) {
-        $search = $request->search;
-
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
-              ->orWhere('sku', 'like', "%{$search}%")
-              ->orWhereDate('created_at', $search)
-              ->orWhereDate('updated_at', $search);
-        });
-    }
-
 
         //fetch products from the database with pagination
          $products = $query->latest()->paginate(10);
@@ -59,7 +46,29 @@ class ProductController extends Controller
     //SHOW FUNCTION - To display the specified product details  
     public function show(Product $product)
     {
+        //create search function on product table
+        
+
         return view('products.show', compact('product'));
+    }
+
+    public function search($param){
+        
+
+        //check if there is a search query
+        if (isset($param)) {
+            $query = Product::where(function ($q) use ($param) {
+                $q->where('name', 'like', "%{$param}%")
+                ->orWhere('sku', 'like', "%{$param}%")
+                ->orWhereDate('created_at', $param)
+                ->orWhereDate('updated_at', $param);
+            })->paginate(10);
+        } else{
+            
+            $results = $query->paginate(10);
+        }
+
+        return view ('products.index', compact('product'));
     }
 
     //EDIT FUNCTION - To show the form for editing the specified product in inventory

@@ -33,6 +33,7 @@ Route::middleware('auth','verified')->group(function () {
 
     //products controller functions
     Route::resource('products', ProductController::class)->middleware('auth');
+    Route::get('/products/search/{param}',[ProductController::class, 'search']);
 
 
     //stocks movement controller
