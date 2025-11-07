@@ -13,23 +13,29 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/email/verify', function () {
-//     return view('auth.verify-email');
-// })->middleware('auth')->name('verification.notice');
 
+//adding verfied to each routes that need to secure
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+
+//adding verfied to each routes that need to secure
 Route::middleware('auth','verified')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+//adding verfied to each routes that need to secure
 // Stock/Prodcut routes for managing product stock movements 
 Route::middleware('auth','verified')->group(function () {
+
+    //products controller functions
     Route::resource('products', ProductController::class)->middleware('auth');
+
+
+    //stocks movement controller
     Route::get('/stock', [ProductStockController::class, 'index'])->name('stock.index');
     Route::get('/stock/create', [ProductStockController::class, 'create'])->name('stock.create');
     Route::post('/stock/create', [ProductStockController::class, 'store'])->name('stock.store');
