@@ -17,10 +17,10 @@
                             <select id="product_id" name="product_id"
                                 class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring @error('product_id') border-red-500 @else ring-blue-300 @enderror">
                                 <option value="">-- Select Product --</option>
-                                @foreach ($products as $product)
-                                    <option value="{{ $product->id }}"
-                                        {{ old('product_id', $stockMovement->product_id) == $product->id ? 'selected' : '' }}>
-                                        {{ $product->name }} (SKU: {{ $product->sku }})
+                                @foreach ($stocks as $stock)
+                                    <option value="{{ $stock->id }}"
+                                        {{ old('product_id', $stockMovement->product_id) == $stock->id ? 'selected' : '' }}>
+                                        {{ $stock->name }} (SKU: {{ $stock->sku }})
                                     </option>
                                 @endforeach
                             </select>

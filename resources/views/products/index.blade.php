@@ -18,7 +18,7 @@
                             Product</a>
                     </div>
                     <div class="mb-1">
-                        <form method="GET" action="{{ route('products.index') }}">
+                        <form method="GET" action="{{ route('products.search') }}">
                             <div class="flex space-x-2">
                                 <input type="text" name="search" id="search" placeholder="Search products..."
                                     value="{{ request('search') }}"
@@ -166,7 +166,8 @@
     const searchInput = document.getElementById('search');
     searchInput.addEventListener('input', function() {
         if (this.value === '') {
-            window.location.href = "{{ route('products.index') }}";
+            // FIX: Redirect to the index page (full product list)
+            window.location.href = "{{ route('products.index') }}"; 
         }
     });
 </script>
