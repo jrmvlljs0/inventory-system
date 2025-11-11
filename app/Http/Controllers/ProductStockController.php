@@ -48,6 +48,8 @@ class ProductStockController extends Controller
         return redirect()->route('stock.index')->with('success', 'Stock movement created successfully.');
     }
 
+
+    //SEARCH FUNCTION - to search the index value on stock table
     public function search(Request $request)
     {
 

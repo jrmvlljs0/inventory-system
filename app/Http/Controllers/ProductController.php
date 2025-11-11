@@ -52,6 +52,7 @@ class ProductController extends Controller
         return view('products.show', compact('product'));
     }
 
+    //SEARCH FUNCTION - search the index value of product table
     public function search(Request $request)
     {
 
@@ -85,24 +86,6 @@ class ProductController extends Controller
         return view('products.edit', compact('product'));
     }
 
-    // public function search($param)
-    // {
-
-    //     // check if there is a search query
-    //     if (isset($param)) {
-    //         $query = Product::where(function ($q) use ($param) {
-    //             $q->where('name', 'like', "%{$param}%")
-    //                 ->orWhere('sku', 'like', "%{$param}%")
-    //                 ->orWhereDate('created_at', $param)
-    //                 ->orWhereDate('updated_at', $param);
-    //         })->paginate(10);
-    //     } else {
-
-    //         $results = $query->paginate(10);
-    //     }
-
-    //     return view('products.index', compact('product'));
-    // }
 
     // UPDATE FUNCTION - To update the specified product in inventory
     public function update(Request $request, Product $product)
