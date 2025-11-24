@@ -18,7 +18,7 @@
                             Product</a>
                     </div>
                     <div class="mb-1">
-                        <form method="GET" action="{{ route('products.search') }}">
+                        <form method="GET" action="{{ route('products.search') }}" onsubmit="return false;">
                             <div class="flex space-x-2">
                                 <input type="text" name="search" id="search" placeholder="Search products..."
                                     value="{{ request('search') }}"
@@ -60,7 +60,7 @@
                                 </tr>
                             </thead>
 
-                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                            <tbody  id="product-table-body" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                                 @forelse($products as $product)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                         <td
@@ -152,9 +152,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-4">
-                        {{ $products->links() }}
-                    </div>
+                  <div id="pagination-links" class="mt-4 flex justify-center space-x-1"></div>
+
                 </div>
             </div>
         </div>
@@ -163,11 +162,81 @@
 </x-app-layout>
 
 <script>
-    const searchInput = document.getElementById('search');
-    searchInput.addEventListener('input', function() {
-        if (this.value === '') {
-            // FIX: Redirect to the index page (full product list)
-            window.location.href = "{{ route('products.index') }}"; 
-        }
+    // get search input element
+    let searchInput = document.getElementById('search');
+    let timeout = null;
+
+   // fetch products function
+    function fetchProducts(page = 1) {
+        let query = searchInput.value;
+
+        // show loading
+        let tbody = document.getElementById('product-table-body');
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400">Loading...</td></tr>`;
+
+        // axios get request
+        axios.get("{{ route('products.search') }}", {
+            params: { search: query, page: page }
+        })
+        .then(res => {
+            let products = res.data.data;
+            let tbodyHtml = '';
+
+            if (products.length === 0) {
+                tbodyHtml = `<tr><td colspan="6" class="text-center py-4 text-gray-400">No products found.</td></tr>`;
+            } else {
+                products.forEach(p => {
+                    tbodyHtml += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="px-6 py-4 text-white">${p.id}</td>
+                            <td class="px-6 py-4 text-white"><a href="/products/${p.id}">${p.name}</a></td>
+                            <td class="px-6 py-4 text-white">${p.sku}</td>
+                            <td class="px-6 py-4 text-white">${p.description ?? ''}</td>
+                            <td class="px-6 py-4 ${p.stock_quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}">${p.stock_quantity ?? 0}</td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <a href="/products/${p.id}" class="px-3 py-2 bg-blue-500 text-white rounded">Show</a>
+                                <a href="/products/${p.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded">Edit</a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tbody.innerHTML = tbodyHtml;
+
+            // Pagination
+            let pagination = '';
+            let current = res.data.pagination.current_page;
+            let last = res.data.pagination.last_page;
+
+            if (last > 1) {
+                // Previous
+                pagination += `<button class="px-3 py-1 border rounded ${current===1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===1 ? 'disabled' : 'onclick="fetchProducts('+(current-1)+')"'}>Previous</button>`;
+
+                // Pages
+                for (let i = 1; i <= last; i++) {
+                    pagination += `<button class="px-3 py-1 border rounded ${i===current ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}" onclick="fetchProducts(${i})">${i}</button>`;
+                }
+
+                // Next
+                pagination += `<button class="px-3 py-1 border rounded ${current===last ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===last ? 'disabled' : 'onclick="fetchProducts('+(current+1)+')"'}>Next</button>`;
+            }
+
+            document.getElementById('pagination-links').innerHTML = pagination;
+
+        })
+        .catch(err => console.error(err));
+    }
+
+    //debounce search input
+    searchInput.addEventListener('keyup', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchProducts(1), 300);
+    });
+
+    //first fetch on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchProducts(1);
     });
 </script>
+

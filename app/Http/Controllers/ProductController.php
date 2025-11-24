@@ -52,33 +52,35 @@ class ProductController extends Controller
         return view('products.show', compact('product'));
     }
 
-    //SEARCH FUNCTION - search the index value of product table
-    public function search(Request $request)
+    //SEARCH FUNCTION - search the index value of product table such as name and sku
+   public function search(Request $request)
     {
+        // get the search input
+        $search = $request->search;
 
-        $searchBar = $request->input('search');
+        // build the query
+        $productsQuery = Product::query();
 
-        $products = Product::query();
-
-        // conditional applly the search filter
-        if ($searchBar) {
-            $products->where(function ($q) use ($searchBar) {
-                $q->where('name', 'like', "%{$searchBar}%")
-                    ->orWhere('sku', 'like', "%{$searchBar}%");
-
-                if (strtotime($searchBar)) {
-                    $q->orWhereDate('created_at', date('Y-m-d', strtotime($searchBar)))
-                        ->orWhereDate('updated_at', date('Y-m-d', strtotime($searchBar)));
-                }
-            });
+        // apply search filters
+        if ($search) {
+            $productsQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('sku', 'like', "%{$search}%");
         }
 
-        $products = $products->paginate(10)->withQueryString();
+        // paginate 10 per page
+        $products = $productsQuery->paginate(10);
 
-        return view('products.index', compact('products'));
-
+        // return JSON including pagination
+        return response()->json([
+            'data' => $products->items(),
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ],
+        ]);
     }
-
     // EDIT FUNCTION - To show the form for editing the specified product in inventory
     public function edit(Product $product)
     {

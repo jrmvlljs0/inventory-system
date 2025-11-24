@@ -33,4 +33,14 @@ class Product extends Model
             return $this->stockMovements()->sum('quantity');
         }
 
+        // public static function getProducts($search_keyword,$name,$sku){
+        //     $products = Product::query();
+
+        //     if ($search_keyword) {
+        //         $products->where(function ($query) use ($search_keyword) {
+        //             $query->where('name', 'like', '%' . $search_keyword . '%')
+        //                   ->orWhere('sku', 'like', '%' . $search_keyword . '%');
+        //         });
+        //     }
+        // }
 }
