@@ -93,52 +93,6 @@
                                                 color="green">
                                                 Edit
                                             </a>
-
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                                class="inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" command="show-modal" commandfor="dialog"
-                                                    class="rounded bg-red-500 px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-red-400">Delete</button>
-                                                <el-dialog>
-                                                    <dialog id="dialog" aria-labelledby="dialog-title"
-                                                        class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
-                                                        <el-dialog-backdrop
-                                                            class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
-
-                                                        <div tabindex="0"
-                                                            class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
-                                                            <el-dialog-panel
-                                                                class="relative transform overflow-hidden rounded-lg bg-gray-800 text-left shadow-xl outline -outline-offset-1 outline-white/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
-                                                                <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                                                    <div class="sm:flex sm:items-start">
-                                                                        <div
-                                                                            class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                                                            <h3 id="dialog-title"
-                                                                                class="text-base font-semibold text-white">
-                                                                                Confirmation</h3>
-                                                                            <div class="mt-2">
-                                                                                <p class="text-sm text-gray-400">Are you
-                                                                                    Are you sure you want to delete this
-                                                                                    Product?</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div
-                                                                    class="bg-gray-700/25 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                                                    <button type="submit" command="close"
-                                                                        commandfor="dialog"
-                                                                        class="inline-flex w-full justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-400 sm:ml-3 sm:w-auto">Delete</button>
-                                                                    <button type="button" command="close"
-                                                                        commandfor="dialog"
-                                                                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20 sm:mt-0 sm:w-auto">Cancel</button>
-                                                                </div>
-                                                            </el-dialog-panel>
-                                                        </div>
-                                                    </dialog>
-                                                </el-dialog>
-                                            </form>
                                         </td>
                                     </tr>
                                 @empty
@@ -158,7 +112,25 @@
             </div>
         </div>
     </div>
+</div>
+<!-- Modal (div-based for consistent centering across browsers) -->
+<div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50">
+    <!-- overlay (click to close) -->
+    <div class="absolute inset-0" onclick="closeDeleteModal()" aria-hidden="true"></div>
+
+    <!-- modal panel -->
+    <div role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" tabindex="-1" class="relative bg-gray-800 rounded-lg w-full max-w-md p-6 mx-4">
+        <h3 id="deleteModalTitle" class="text-white font-bold text-lg mb-4">Confirmation</h3>
+        <p class="text-gray-300 mb-4">Are you sure you want to delete this product?</p>
+        <form id="deleteForm" method="POST" class="flex justify-end gap-2">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-red-500 px-4 py-2 rounded text-white hover:bg-red-600">Delete</button>
+            <button type="button" onclick="closeDeleteModal()" class="bg-gray-600 px-4 py-2 rounded text-white hover:bg-gray-700">Cancel</button>
+        </form>
     </div>
+</div>
+
 </x-app-layout>
 
 <script>
@@ -196,6 +168,7 @@
                             <td class="px-6 py-4 flex gap-2">
                                 <a href="/products/${p.id}" class="px-3 py-2 bg-blue-500 text-white rounded">Show</a>
                                 <a href="/products/${p.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded">Edit</a>
+                               <button type="button" data-delete-id="${p.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -203,7 +176,9 @@
             }
 
             tbody.innerHTML = tbodyHtml;
-
+            
+            // attach delete button events for the newly rendered rows
+            attachDeleteEvents();
             // Pagination
             let pagination = '';
             let current = res.data.pagination.current_page;
@@ -227,6 +202,56 @@
         })
         .catch(err => console.error(err));
     }
+function attachDeleteEvents() {
+    document.querySelectorAll('button[data-delete-id]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = this.getAttribute('data-delete-id');
+            openDeleteModal(productId);
+        });
+    });
+}
+
+function openDeleteModal(id) {
+    const modal = document.getElementById('deleteModal');
+    const form = document.getElementById('deleteForm');
+    form.action = `/products/${id}`; // dynamically set the delete URL
+    // show modal (use Tailwind classes for flex centering)
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    // move focus to the dialog content for accessibility
+    const panel = modal.querySelector('[role="dialog"]');
+    if (panel) panel.focus();
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    // return focus to the search input for convenience
+    const search = document.getElementById('search');
+    if (search) search.focus();
+}
+
+// close modal when clicking outside dialog content
+(function setupModalCloseHandlers() {
+    const modal = document.getElementById('deleteModal');
+    if (!modal) return;
+
+    // click on overlay
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeDeleteModal();
+        }
+    });
+
+    // ESC key closes modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !modal.hasAttribute('hidden')) {
+            closeDeleteModal();
+        }
+    });
+})();
+
 
     //debounce search input
     searchInput.addEventListener('keyup', function() {
@@ -237,6 +262,8 @@
     //first fetch on page load
     document.addEventListener('DOMContentLoaded', function() {
         fetchProducts(1);
+        // attach events for any server-rendered buttons (if present)
+        attachDeleteEvents();
     });
 </script>
 

@@ -53,34 +53,42 @@ class ProductController extends Controller
     }
 
     //SEARCH FUNCTION - search the index value of product table such as name and sku
-   public function search(Request $request)
-    {
-        // get the search input
-        $search = $request->search;
+ public function search(Request $request)
+        {
+            $search = $request->search;
 
-        // build the query
-        $productsQuery = Product::query();
+            $productsQuery = Product::query();
 
-        // apply search filters
-        if ($search) {
-            $productsQuery->where('name', 'like', "%{$search}%")
+            if ($search) {
+                $productsQuery->where('name', 'like', "%{$search}%")
                             ->orWhere('sku', 'like', "%{$search}%");
+            }
+
+            // eager load stock movements to calculate stock
+            $products = $productsQuery->with('stockMovements')->paginate(10);
+
+            // map products to include computed stock_quantity
+            $data = $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'description' => $product->description,
+                    'stock_quantity' => $product->stockMovements->sum('quantity'), // total stock
+                ];
+            });
+
+            return response()->json([
+                'data' => $data,
+                'pagination' => [
+                    'current_page' => $products->currentPage(),
+                    'last_page' => $products->lastPage(),
+                    'per_page' => $products->perPage(),
+                    'total' => $products->total(),
+                ],
+            ]);
         }
 
-        // paginate 10 per page
-        $products = $productsQuery->paginate(10);
-
-        // return JSON including pagination
-        return response()->json([
-            'data' => $products->items(),
-            'pagination' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-            ],
-        ]);
-    }
     // EDIT FUNCTION - To show the form for editing the specified product in inventory
     public function edit(Product $product)
     {

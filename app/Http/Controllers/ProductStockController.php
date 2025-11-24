@@ -50,32 +50,6 @@ class ProductStockController extends Controller
 
 
     //SEARCH FUNCTION - to search the index value on stock table
-    public function search(Request $request)
-    {
-
-        $searchBar = $request->input('search');
-
-        $stock = StockMovement::with('product')->latest();
-
-        if ($searchBar) {
-            $stock->where(function ($q) use ($searchBar) {
-                $q->where('quantity', 'like', "%{$searchBar}%");
-                // ->orWhere('quantity', '=', "%{$searchBar}%");
-
-                if (strtotime($searchBar)) {
-                    $q->orWhereDate('created_at', date('Y-m-d', strtotime($searchBar)))
-                        ->orWhereDate('updated_at', date('Y-m-d', strtotime($searchBar)));
-                }
-            });
-            $stock->orWhereHas('product', function ($q) use ($searchBar) {
-                $q->where('name', 'like', "%{$searchBar}%")
-                    ->orWhere('sku', 'like', "%{$searchBar}%");
-            });
-        }
-        $stockMovements = $stock->paginate(10)->withQueryString();
-
-        return view('stock.index', compact('stockMovements'));
-    }
 
     // EDIT FUNCTION - To show the form for editing the specified product in inventory
     public function edit(StockMovement $stockMovement)
