@@ -60,7 +60,7 @@
                                         Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                            <tbody id="stock-table-body" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                                 @forelse ($stockMovements as $movement)
                                     <tr class="text-white hover:bg-gray-50 dark:hover:bg-gray-700">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
@@ -144,19 +144,184 @@
                     </div>
 
                     <div class="mt-4">
-                        {{ $stockMovements->links() }}
+                        <div id="pagination-links">
+                            {{ $stockMovements->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+<!-- Reusable delete modal used by AJAX-rendered rows -->
+<div id="deleteModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
+    <div role="dialog" aria-modal="true" class="relative max-w-lg w-full bg-gray-800 rounded-lg overflow-hidden">
+        <form id="deleteForm" method="POST" class="p-4">
+            @csrf
+            @method('DELETE')
+            <h3 class="text-lg font-medium text-white mb-2">Confirm delete</h3>
+            <p class="text-sm text-gray-300 mb-4">Are you sure you want to delete this stock movement?</p>
+            <div class="flex justify-end gap-2">
+                <button type="button" id="cancelDelete" class="px-3 py-2 bg-white/10 text-white rounded">Cancel</button>
+                <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    // Elements
     const searchInput = document.getElementById('search');
-    searchInput.addEventListener('input', function() {
-        if (this.value === '') {
-            // FIX: Redirect to the index page (full product list)
-            window.location.href = "{{ route('stock.index') }}"; 
+    const tbody = document.getElementById('stock-table-body');
+    const paginationContainer = document.getElementById('pagination-links');
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteForm = document.getElementById('deleteForm');
+    const cancelDelete = document.getElementById('cancelDelete');
+
+    let timeout = null;
+
+    // Fetch stocks (or products with stock) via AJAX
+    function fetchStocks(page = 1) {
+        const query = searchInput ? searchInput.value : '';
+
+        // show loading
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400">Loading...</td></tr>`;
+
+        axios.get("{{ route('stock.search') }}", { params: { search: query, page: page } })
+            .then(res => {
+                const items = res.data.data || [];
+                let tbodyHtml = '';
+
+                if (items.length === 0) {
+                    tbodyHtml = `<tr><td colspan="6" class="text-center py-4 text-gray-400">No results found.</td></tr>`;
+                } else {
+                    // detect if API returned product-like objects (have sku/stock_quantity)
+                    const first = items[0];
+                    const isProductLike = first && (first.sku !== undefined || first.stock_quantity !== undefined);
+
+                    if (isProductLike) {
+                        // render product-like rows (id, name, sku, description, stock_quantity)
+                        items.forEach(p => {
+                            tbodyHtml += `
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 text-white"></tr>
+                                    <td class="px-6 py-4">${p.id}</td>
+                                    <td class="px-6 py-4">${p.created_at->format('Y-m-d H:i')}</td>
+                                    <td class="px-6 py-4">${p.name}</td>
+                                    <td class="px-6 py-4 ${p.stock_quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}">${p.stock_quantity}</td>
+                                    <td class="px-6 py-4">-</td>
+                                    <td class="px-6 py-4 flex gap-2">
+                                        <a href="/products/${p.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded">Edit</a>
+                                        <button type="button" data-delete-id="${p.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                                    </td>
+                                </tr>   
+                            `;
+                        });
+                    } else {
+                        // assume movement-like objects (id, created_at, product, quantity, reason)
+                        items.forEach(m => {
+                            const date = m.created_at ? (new Date(m.created_at)).toLocaleString() : (m.date ?? '');
+                            const productName = (m.product && (m.product.name || m.product)) || m.product_name || '';
+                            tbodyHtml += `
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 text-white">
+                                    <td class="px-6 py-4">${m.id}</td>
+                                    <td class="px-6 py-4">${date}</td>
+                                    <td class="px-6 py-4">${productName}</td>
+                                    <td class="px-6 py-4 ${m.quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}">${m.quantity}</td>
+                                    <td class="px-6 py-4">${m.reason ?? ''}</td>
+                                    <td class="px-6 py-4 flex gap-2">
+                                        <a href="/stock/${m.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded">Edit</a>
+                                        <button type="button" data-delete-id="${m.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                }
+
+                tbody.innerHTML = tbodyHtml;
+
+                // attach delete events for dynamic rows
+                attachDeleteEvents();
+
+                // pagination render
+                const pag = res.data.pagination || {};
+                const current = pag.current_page || 1;
+                const last = pag.last_page || 1;
+
+                let paginationHtml = '';
+                if (last > 1) {
+                    paginationHtml += `<button class="px-3 py-1 border rounded ${current===1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===1 ? 'disabled' : 'onclick="fetchStocks('+(current-1)+')"'}>Previous</button>`;
+                    for (let i = 1; i <= last; i++) {
+                        paginationHtml += `<button class="px-3 py-1 border rounded ${i===current ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}" onclick="fetchStocks(${i})">${i}</button>`;
+                    }
+                    paginationHtml += `<button class="px-3 py-1 border rounded ${current===last ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===last ? 'disabled' : 'onclick="fetchStocks('+(current+1)+')"'}>Next</button>`;
+                }
+
+                paginationContainer.innerHTML = paginationHtml;
+
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">An error occurred while fetching data.</td></tr>`;
+            });
+    }
+
+    function attachDeleteEvents() {
+        document.querySelectorAll('button[data-delete-id]').forEach(btn => {
+            btn.removeEventListener('click', deleteHandler);
+            btn.addEventListener('click', deleteHandler);
+        });
+    }
+
+    function deleteHandler() {
+        const id = this.getAttribute('data-delete-id');
+        openDeleteModal(id);
+    }
+
+    function openDeleteModal(id) {
+        // set form action to resource delete URL
+        deleteForm.action = `/stock/${id}`;
+        deleteModal.classList.remove('hidden');
+        deleteModal.classList.add('flex');
+        // focus
+        deleteForm.querySelector('button[type="submit"]').focus();
+    }
+
+    function closeDeleteModal() {
+        deleteModal.classList.add('hidden');
+        deleteModal.classList.remove('flex');
+        if (searchInput) searchInput.focus();
+    }
+
+    // cancel button for modal
+    cancelDelete.addEventListener('click', function(e) {
+        e.preventDefault();
+        closeDeleteModal();
+    });
+
+    // clicking overlay closes modal
+    deleteModal.addEventListener('click', function(e) {
+        if (e.target === deleteModal) closeDeleteModal();
+    });
+
+    // ESC closes modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !deleteModal.classList.contains('hidden')) {
+            closeDeleteModal();
         }
+    });
+
+    // debounce search input
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => fetchStocks(1), 300);
+        });
+    }
+
+    // initial fetch on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchStocks(1);
     });
 </script>

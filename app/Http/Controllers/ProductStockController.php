@@ -48,8 +48,42 @@ class ProductStockController extends Controller
         return redirect()->route('stock.index')->with('success', 'Stock movement created successfully.');
     }
 
+    // SEARCH FUNCTION - to search the index value on stock table
+    public function search(Request $request)
+    {
+        $search = $request->search;
 
-    //SEARCH FUNCTION - to search the index value on stock table
+        $productsQuery = Product::query();
+
+        if ($search) {
+            $productsQuery->where('product_id', 'like', "%{$search}%")
+                ->orWhere('quantity', 'like', "%{$search}%");
+        }
+
+        // eager load stock movements to calculate stock
+        $products = $productsQuery->with('stockMovements')->paginate(10);
+
+        // transform collection to include computed stock_quantity
+        $data = $products->getCollection()->transform(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'description' => $product->description,
+                'stock_quantity' => $product->stockMovements->sum('quantity'),
+            ];
+        })->values();
+
+        return response()->json([
+            'data' => $data,
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ],
+        ]);
+    }
 
     // EDIT FUNCTION - To show the form for editing the specified product in inventory
     public function edit(StockMovement $stockMovement)
