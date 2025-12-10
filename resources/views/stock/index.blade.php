@@ -19,8 +19,9 @@
                             Add Stock Movement
                         </a>
                     </div>
-                    <div class="mb-1">
-                        <form method="GET" action="{{ route('stock.search') }}">
+                    
+                     <div class="mb-1">
+                        <form method="GET" action="{{ route('stock.search') }}" onsubmit="return false;">
                             <div class="flex space-x-2">
                                 <input type="text" name="search" id="search" placeholder="Search products..."
                                     value="{{ request('search') }}"
@@ -85,7 +86,7 @@
                                                 color="green">
                                                 Edit
                                             </a>
-                                            <form action="{{ route('stock.destroy', $movement->id) }}" method="POST"
+                                            {{-- <form action="{{ route('stock.destroy', $movement->id) }}" method="POST"
                                                 class="inline-block">
                                                 @csrf
                                                 @method('DELETE')
@@ -129,7 +130,7 @@
                                                         </div>
                                                     </dialog>
                                                 </el-dialog>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @empty
@@ -142,12 +143,14 @@
                             </tbody>
                         </table>
                     </div>
+                <div id="pagination-links" class="mt-4 flex justify-center space-x-1"></div>
 
-                    <div class="mt-4">
+                </div>
+                    {{-- <div class="mt-4">
                         <div id="pagination-links">
                             {{ $stockMovements->links() }}
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -170,158 +173,138 @@
     </div>
 </div>
 
-<script>
-    // Elements
+<script  src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
+// Wrap in an IIFE to avoid polluting global scope
+(function(){
     const searchInput = document.getElementById('search');
-    const tbody = document.getElementById('stock-table-body');
-    const paginationContainer = document.getElementById('pagination-links');
+    let timeout = null;
+
+    // modal elements (used by delete handlers). guard in case markup is missing
     const deleteModal = document.getElementById('deleteModal');
     const deleteForm = document.getElementById('deleteForm');
     const cancelDelete = document.getElementById('cancelDelete');
 
-    let timeout = null;
-
-    // Fetch stocks (or products with stock) via AJAX
+    // fetch stocks using axios to match the products page
     function fetchStocks(page = 1) {
-        const query = searchInput ? searchInput.value : '';
+        const query = (searchInput && searchInput.value) ? searchInput.value : '';
 
         // show loading
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400">Loading...</td></tr>`;
+        const tbody = document.getElementById('stock-table-body');
+        if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400">Loading...</td></tr>`;
 
         axios.get("{{ route('stock.search') }}", { params: { search: query, page: page } })
             .then(res => {
-                const items = res.data.data || [];
+                const movements = res.data.data;
                 let tbodyHtml = '';
 
-                if (items.length === 0) {
+                if (!movements || movements.length === 0) {
                     tbodyHtml = `<tr><td colspan="6" class="text-center py-4 text-gray-400">No results found.</td></tr>`;
                 } else {
-                    // detect if API returned product-like objects (have sku/stock_quantity)
-                    const first = items[0];
-                    const isProductLike = first && (first.sku !== undefined || first.stock_quantity !== undefined);
+                    movements.forEach(movement => {
+                        const date = movement.created_at ? new Date(movement.created_at).toLocaleString() : '';
+                        const quantityClass = movement.quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold';
+                        const productName = movement.product && movement.product.name ? movement.product.name : (movement.product_name ?? '');
 
-                    if (isProductLike) {
-                        // render product-like rows (id, name, sku, description, stock_quantity)
-                        items.forEach(p => {
-                            tbodyHtml += `
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 text-white"></tr>
-                                    <td class="px-6 py-4">${p.id}</td>
-                                    <td class="px-6 py-4">${p.created_at->format('Y-m-d H:i')}</td>
-                                    <td class="px-6 py-4">${p.name}</td>
-                                    <td class="px-6 py-4 ${p.stock_quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}">${p.stock_quantity}</td>
-                                    <td class="px-6 py-4">-</td>
-                                    <td class="px-6 py-4 flex gap-2">
-                                        <a href="/products/${p.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded">Edit</a>
-                                        <button type="button" data-delete-id="${p.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
-                                    </td>
-                                </tr>   
-                            `;
-                        });
-                    } else {
-                        // assume movement-like objects (id, created_at, product, quantity, reason)
-                        items.forEach(m => {
-                            const date = m.created_at ? (new Date(m.created_at)).toLocaleString() : (m.date ?? '');
-                            const productName = (m.product && (m.product.name || m.product)) || m.product_name || '';
-                            tbodyHtml += `
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 text-white">
-                                    <td class="px-6 py-4">${m.id}</td>
-                                    <td class="px-6 py-4">${date}</td>
-                                    <td class="px-6 py-4">${productName}</td>
-                                    <td class="px-6 py-4 ${m.quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}">${m.quantity}</td>
-                                    <td class="px-6 py-4">${m.reason ?? ''}</td>
-                                    <td class="px-6 py-4 flex gap-2">
-                                        <a href="/stock/${m.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded">Edit</a>
-                                        <button type="button" data-delete-id="${m.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                    }
+                        tbodyHtml += `
+                            <tr class="text-white hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">${movement.id}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">${date}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">${productName}</td>
+                                <td class="px-8 py-4 whitespace-nowrap text-sm ${quantityClass}">${movement.quantity}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">${movement.reason ?? ''}</td>
+                                <td class="flex gap-2 px-6 py-4 whitespace-nowrap text-sm">
+                                    <a tag="a" href="/stock/${movement.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600" color="green">Edit</a>
+                                    <button type="button" data-delete-id="${movement.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
                 }
 
-                tbody.innerHTML = tbodyHtml;
+                if (tbody) tbody.innerHTML = tbodyHtml;
 
-                // attach delete events for dynamic rows
+                // attach delete button events
                 attachDeleteEvents();
 
-                // pagination render
-                const pag = res.data.pagination || {};
-                const current = pag.current_page || 1;
-                const last = pag.last_page || 1;
+                // pagination
+                let pagination = '';
+                let current = res.data.pagination.current_page;
+                let last = res.data.pagination.last_page;
 
-                let paginationHtml = '';
                 if (last > 1) {
-                    paginationHtml += `<button class="px-3 py-1 border rounded ${current===1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===1 ? 'disabled' : 'onclick="fetchStocks('+(current-1)+')"'}>Previous</button>`;
+                    pagination += `<button class="px-3 py-1 border rounded ${current===1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===1 ? 'disabled' : 'onclick="fetchStocks('+(current-1)+')"'}>Previous</button>`;
                     for (let i = 1; i <= last; i++) {
-                        paginationHtml += `<button class="px-3 py-1 border rounded ${i===current ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}" onclick="fetchStocks(${i})">${i}</button>`;
+                        pagination += `<button class="px-3 py-1 border rounded ${i===current ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}" onclick="fetchStocks(${i})">${i}</button>`;
                     }
-                    paginationHtml += `<button class="px-3 py-1 border rounded ${current===last ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===last ? 'disabled' : 'onclick="fetchStocks('+(current+1)+')"'}>Next</button>`;
+                    pagination += `<button class="px-3 py-1 border rounded ${current===last ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===last ? 'disabled' : 'onclick="fetchStocks('+(current+1)+')"'}>Next</button>`;
                 }
 
-                paginationContainer.innerHTML = paginationHtml;
-
+                const pagEl = document.getElementById('pagination-links');
+                if (pagEl) pagEl.innerHTML = pagination;
             })
-            .catch(err => {
-                console.error(err);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">An error occurred while fetching data.</td></tr>`;
-            });
+            .catch(err => { console.error(err); });
     }
 
     function attachDeleteEvents() {
-        document.querySelectorAll('button[data-delete-id]').forEach(btn => {
+        const buttons = document.querySelectorAll('button[data-delete-id]');
+        if (!buttons) return;
+        buttons.forEach(btn => {
             btn.removeEventListener('click', deleteHandler);
             btn.addEventListener('click', deleteHandler);
         });
     }
 
-    function deleteHandler() {
+    function deleteHandler(e) {
         const id = this.getAttribute('data-delete-id');
         openDeleteModal(id);
     }
 
     function openDeleteModal(id) {
-        // set form action to resource delete URL
+        if (!deleteForm || !deleteModal) return;
         deleteForm.action = `/stock/${id}`;
         deleteModal.classList.remove('hidden');
         deleteModal.classList.add('flex');
-        // focus
-        deleteForm.querySelector('button[type="submit"]').focus();
+        const submit = deleteForm.querySelector('button[type="submit"]');
+        if (submit) submit.focus();
     }
 
     function closeDeleteModal() {
+        if (!deleteModal) return;
         deleteModal.classList.add('hidden');
         deleteModal.classList.remove('flex');
         if (searchInput) searchInput.focus();
     }
 
-    // cancel button for modal
-    cancelDelete.addEventListener('click', function(e) {
-        e.preventDefault();
-        closeDeleteModal();
-    });
+    if (cancelDelete) {
+        cancelDelete.addEventListener('click', function(e){
+            e.preventDefault();
+            closeDeleteModal();
+        });
+    }
 
-    // clicking overlay closes modal
-    deleteModal.addEventListener('click', function(e) {
-        if (e.target === deleteModal) closeDeleteModal();
-    });
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e){
+            if (e.target === deleteModal) closeDeleteModal();
+        });
+    }
 
-    // ESC closes modal
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !deleteModal.classList.contains('hidden')) {
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && deleteModal && !deleteModal.classList.contains('hidden')) {
             closeDeleteModal();
         }
     });
 
-    // debounce search input
     if (searchInput) {
-        searchInput.addEventListener('keyup', function() {
+        searchInput.addEventListener('keyup', function(){
             clearTimeout(timeout);
             timeout = setTimeout(() => fetchStocks(1), 300);
         });
     }
 
-    // initial fetch on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        fetchStocks(1);
-    });
+    // expose a global fetchStocks so inline onclick pagination buttons still work
+    window.fetchStocks = fetchStocks;
+
+    // initial fetch immediately
+    try { fetchStocks(1); } catch (e) { console.error(e); }
+})();
 </script>

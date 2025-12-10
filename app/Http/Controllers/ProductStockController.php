@@ -49,41 +49,52 @@ class ProductStockController extends Controller
     }
 
     // SEARCH FUNCTION - to search the index value on stock table
-    public function search(Request $request)
-    {
-        $search = $request->search;
+   public function search(Request $request)
+{
+    $search = $request->search;
 
-        $productsQuery = Product::query();
+    $query = StockMovement::with('product')->latest();
 
-        if ($search) {
-            $productsQuery->where('product_id', 'like', "%{$search}%")
-                ->orWhere('quantity', 'like', "%{$search}%");
+    if ($search) {
+        if (is_numeric($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('product_id', $search)
+                  ->orWhere('quantity', $search);
+            });
+        } else {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('product', function ($p) use ($search) {
+                    $p->where('name', 'like', "%{$search}%");
+                })
+                ->orWhere('reason', 'like', "%{$search}%");
+            });
         }
-
-        // eager load stock movements to calculate stock
-        $products = $productsQuery->with('stockMovements')->paginate(10);
-
-        // transform collection to include computed stock_quantity
-        $data = $products->getCollection()->transform(function ($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'sku' => $product->sku,
-                'description' => $product->description,
-                'stock_quantity' => $product->stockMovements->sum('quantity'),
-            ];
-        })->values();
-
-        return response()->json([
-            'data' => $data,
-            'pagination' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-            ],
-        ]);
     }
+
+    $movements = $query->paginate(10);
+
+    $data = $movements->map(function ($movement) {
+        return [
+            'id' => $movement->id,
+            'product_id' => $movement->product_id,
+            'product_name' => optional($movement->product)->name,
+            'quantity' => $movement->quantity,
+            'reason' => $movement->reason,
+            'created_at' => $movement->created_at->toDateTimeString(),
+        ];
+    });
+
+    return response()->json([
+        'data' => $data->values(),
+        'pagination' => [
+            'current_page' => $movements->currentPage(),
+            'last_page' => $movements->lastPage(),
+            'per_page' => $movements->perPage(),
+            'total' => $movements->total(),
+        ],
+    ]);
+}
+    
 
     // EDIT FUNCTION - To show the form for editing the specified product in inventory
     public function edit(StockMovement $stockMovement)
