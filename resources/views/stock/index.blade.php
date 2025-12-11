@@ -62,249 +62,164 @@
                                 </tr>
                             </thead>
                             <tbody id="stock-table-body" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                                @forelse ($stockMovements as $movement)
-                                    <tr class="text-white hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            {{ $movement->id }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            {{ $movement->created_at->format('Y-m-d H:i') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            {{ $movement->product->name }}
-                                        </td>
-                                        <td
-                                            class="px-8 py-4 whitespace-nowrap text-sm {{ $movement->quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold' }}">
-                                            {{ $movement->quantity }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            {{ $movement->reason }}
-                                        </td>
-                                        <td class="flex gap-2 px-6 py-4 whitespace-nowrap text-sm">
-                                            <a tag="a" href="{{ route('stock.edit', $movement) }}"
-                                                class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                                                color="green">
-                                                Edit
-                                            </a>
-                                            {{-- <form action="{{ route('stock.destroy', $movement->id) }}" method="POST"
-                                                class="inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" command="show-modal" commandfor="dialog"
-                                                    class="rounded bg-red-500 px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-red-400">Delete</button>
-                                                <el-dialog>
-                                                    <dialog id="dialog" aria-labelledby="dialog-title"
-                                                        class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
-                                                        <el-dialog-backdrop
-                                                            class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
-
-                                                        <div tabindex="0"
-                                                            class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
-                                                            <el-dialog-panel
-                                                                class="relative transform overflow-hidden rounded-lg bg-gray-800 text-left shadow-xl outline -outline-offset-1 outline-white/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
-                                                                <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                                                    <div class="sm:flex sm:items-start">
-                                                                        <div
-                                                                            class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                                                            <h3 id="dialog-title"
-                                                                                class="text-base font-semibold text-white">
-                                                                                Confirmation</h3>
-                                                                            <div class="mt-2">
-                                                                                <p class="text-sm text-gray-400">Are you
-                                                                                    Are you sure you want to delete this
-                                                                                    Stock?</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div
-                                                                    class="bg-gray-700/25 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                                                    <button type="submit" command="close"
-                                                                        commandfor="dialog"
-                                                                        class="inline-flex w-full justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-400 sm:ml-3 sm:w-auto">Delete</button>
-                                                                    <button type="button" command="close"
-                                                                        commandfor="dialog"
-                                                                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20 sm:mt-0 sm:w-auto">Cancel</button>
-                                                                </div>
-                                                            </el-dialog-panel>
-                                                        </div>
-                                                    </dialog>
-                                                </el-dialog>
-                                            </form> --}}
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                            No stock movements found.
-                                        </td>
-                                    </tr>
-                                @endforelse
+                               
                             </tbody>
                         </table>
                     </div>
-                <div id="pagination-links" class="mt-4 flex justify-center space-x-1"></div>
-
-                </div>
-                    {{-- <div class="mt-4">
-                        <div id="pagination-links">
-                            {{ $stockMovements->links() }}
-                        </div>
-                    </div> --}}
-                </div>
+                <div id="stock-pagination-links" class="mt-4 flex justify-center space-x-1"></div>
             </div>
         </div>
     </div>
-</x-app-layout>
-<!-- Reusable delete modal used by AJAX-rendered rows -->
-<div id="deleteModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
-    <div role="dialog" aria-modal="true" class="relative max-w-lg w-full bg-gray-800 rounded-lg overflow-hidden">
-        <form id="deleteForm" method="POST" class="p-4">
-            @csrf
-            @method('DELETE')
-            <h3 class="text-lg font-medium text-white mb-2">Confirm delete</h3>
-            <p class="text-sm text-gray-300 mb-4">Are you sure you want to delete this stock movement?</p>
-            <div class="flex justify-end gap-2">
-                <button type="button" id="cancelDelete" class="px-3 py-2 bg-white/10 text-white rounded">Cancel</button>
-                <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded">Delete</button>
-            </div>
-        </form>
+    <!-- Modal (div-based for consistent centering across browsers) -->
+    <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50">
+        <!-- overlay (click to close) -->
+        <div class="absolute inset-0" onclick="closeDeleteModal()" aria-hidden="true"></div>
+    
+        <!-- modal panel -->
+        <div role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" tabindex="-1" class="relative bg-gray-800 rounded-lg w-full max-w-md p-6 mx-4">
+            <h3 id="deleteModalTitle" class="text-white font-bold text-lg mb-4">Confirmation</h3>
+            <p class="text-gray-300 mb-4">Are you sure you want to delete this product?</p>
+            <form id="deleteForm" method="POST" class="flex justify-end gap-2">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-red-500 px-4 py-2 rounded text-white hover:bg-red-600">Delete</button>
+                <button type="button" onclick="closeDeleteModal()" class="bg-gray-600 px-4 py-2 rounded text-white hover:bg-gray-700">Cancel</button>
+            </form>
+        </div>
     </div>
-</div>
+</x-app-layout>
 
-<script  src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
-// Wrap in an IIFE to avoid polluting global scope
-(function(){
-    const searchInput = document.getElementById('search');
+
+<script>
+    // get search input element
+    let searchInput = document.getElementById('search');
     let timeout = null;
 
-    // modal elements (used by delete handlers). guard in case markup is missing
-    const deleteModal = document.getElementById('deleteModal');
-    const deleteForm = document.getElementById('deleteForm');
-    const cancelDelete = document.getElementById('cancelDelete');
-
-    // fetch stocks using axios to match the products page
+    // fetch stocks function
     function fetchStocks(page = 1) {
-        const query = (searchInput && searchInput.value) ? searchInput.value : '';
+        let query = searchInput.value;
 
         // show loading
-        const tbody = document.getElementById('stock-table-body');
-        if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400">Loading...</td></tr>`;
+        let tbody = document.getElementById('stock-table-body');
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400">Loading...</td></tr>`;
 
-        axios.get("{{ route('stock.search') }}", { params: { search: query, page: page } })
-            .then(res => {
-                const movements = res.data.data;
-                let tbodyHtml = '';
+        // axios get request
+        axios.get("{{ route('stock.search') }}", {
+            params: { search: query, page: page }
+        })
+        .then(res => {
+            let movements = res.data.data;
+            let tbodyHtml = '';
 
-                if (!movements || movements.length === 0) {
-                    tbodyHtml = `<tr><td colspan="6" class="text-center py-4 text-gray-400">No results found.</td></tr>`;
-                } else {
-                    movements.forEach(movement => {
-                        const date = movement.created_at ? new Date(movement.created_at).toLocaleString() : '';
-                        const quantityClass = movement.quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold';
-                        const productName = movement.product && movement.product.name ? movement.product.name : (movement.product_name ?? '');
+            if (movements.length === 0) {
+                tbodyHtml = `<tr><td colspan="6" class="text-center py-4 text-gray-400">No results found.</td></tr>`;
+            } else {
+                movements.forEach(m => {
+                    tbodyHtml += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 text-white">
+                            <td class="px-6 py-4">${m.id}</td>
+                            <td class="px-6 py-4">${new Date(m.created_at).toLocaleString()}</td>
+                            <td class="px-6 py-4">${m.product_name}</td>
+                            <td class="px-6 py-4 ${m.quantity < 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}">${m.quantity}</td>
+                            <td class="px-6 py-4">${m.reason ?? ''}</td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <a href="/stock/${m.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded">Edit</a>
+                                <button type="button" data-delete-id="${m.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
 
-                        tbodyHtml += `
-                            <tr class="text-white hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">${movement.id}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">${date}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">${productName}</td>
-                                <td class="px-8 py-4 whitespace-nowrap text-sm ${quantityClass}">${movement.quantity}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">${movement.reason ?? ''}</td>
-                                <td class="flex gap-2 px-6 py-4 whitespace-nowrap text-sm">
-                                    <a tag="a" href="/stock/${movement.id}/edit" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600" color="green">Edit</a>
-                                    <button type="button" data-delete-id="${movement.id}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
+            tbody.innerHTML = tbodyHtml;
+
+            // attach delete button events
+            attachDeleteEvents();
+
+            // Pagination
+            let pagination = '';
+            let current = res.data.pagination.current_page;
+            let last = res.data.pagination.last_page;
+
+            if (last > 1) {
+                if (current > 1) {
+                    pagination += `<button class="px-3 py-1 rounded bg-gray-600 text-white hover:bg-gray-500" onclick="fetchStocks(${current - 1})">Previous</button>`;
                 }
 
-                if (tbody) tbody.innerHTML = tbodyHtml;
-
-                // attach delete button events
-                attachDeleteEvents();
-
-                // pagination
-                let pagination = '';
-                let current = res.data.pagination.current_page;
-                let last = res.data.pagination.last_page;
-
-                if (last > 1) {
-                    pagination += `<button class="px-3 py-1 border rounded ${current===1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===1 ? 'disabled' : 'onclick="fetchStocks('+(current-1)+')"'}>Previous</button>`;
-                    for (let i = 1; i <= last; i++) {
-                        pagination += `<button class="px-3 py-1 border rounded ${i===current ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}" onclick="fetchStocks(${i})">${i}</button>`;
-                    }
-                    pagination += `<button class="px-3 py-1 border rounded ${current===last ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===last ? 'disabled' : 'onclick="fetchStocks('+(current+1)+')"'}>Next</button>`;
+                for (let i = 1; i <= last; i++) {
+                    pagination += `<button class="px-3 py-1 rounded ${i===current ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white hover:bg-gray-500'}" onclick="fetchStocks(${i})">${i}</button>`;
                 }
 
-                const pagEl = document.getElementById('pagination-links');
-                if (pagEl) pagEl.innerHTML = pagination;
-            })
-            .catch(err => { console.error(err); });
+                if (current < last) {
+                    pagination += `<button class="px-3 py-1 rounded bg-gray-600 text-white hover:bg-gray-500" onclick="fetchStocks(${current + 1})">Next</button>`;
+                }
+            }
+
+            document.getElementById('stock-pagination-links').innerHTML = pagination;
+
+        })
+        .catch(err => console.error(err));
     }
 
+    // Delete buttons
     function attachDeleteEvents() {
-        const buttons = document.querySelectorAll('button[data-delete-id]');
-        if (!buttons) return;
-        buttons.forEach(btn => {
-            btn.removeEventListener('click', deleteHandler);
-            btn.addEventListener('click', deleteHandler);
+        document.querySelectorAll('button[data-delete-id]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const stockId = this.getAttribute('data-delete-id');
+                openDeleteModal(stockId);
+            });
         });
-    }
-
-    function deleteHandler(e) {
-        const id = this.getAttribute('data-delete-id');
-        openDeleteModal(id);
     }
 
     function openDeleteModal(id) {
-        if (!deleteForm || !deleteModal) return;
-        deleteForm.action = `/stock/${id}`;
-        deleteModal.classList.remove('hidden');
-        deleteModal.classList.add('flex');
-        const submit = deleteForm.querySelector('button[type="submit"]');
-        if (submit) submit.focus();
+        const modal = document.getElementById('deleteModal');
+        const form = document.getElementById('deleteForm');
+        form.action = `/stock/${id}`; // dynamically set the delete URL
+        // show modal (use Tailwind classes for flex centering)
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        // move focus to the dialog content for accessibility
+        const panel = modal.querySelector('[role="dialog"]');
+        if (panel) panel.focus();
     }
 
     function closeDeleteModal() {
-        if (!deleteModal) return;
-        deleteModal.classList.add('hidden');
-        deleteModal.classList.remove('flex');
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        // return focus to search input
+        const search = document.getElementById('search');
         if (searchInput) searchInput.focus();
     }
 
-    if (cancelDelete) {
-        cancelDelete.addEventListener('click', function(e){
-            e.preventDefault();
-            closeDeleteModal();
-        });
-    }
+    // close modal when clicking outside or pressing ESC
+    (function setupModalCloseHandlers() {
+        const modal = document.getElementById('deleteModal');
+        if (!modal) return;
 
-    if (deleteModal) {
-        deleteModal.addEventListener('click', function(e){
-            if (e.target === deleteModal) closeDeleteModal();
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeDeleteModal();
         });
-    }
 
-    document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape' && deleteModal && !deleteModal.classList.contains('hidden')) {
-            closeDeleteModal();
-        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeDeleteModal();
+            }
+        });
+    })();
+
+    // debounce search input
+    searchInput.addEventListener('keyup', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchStocks(1), 300);
     });
 
-    if (searchInput) {
-        searchInput.addEventListener('keyup', function(){
-            clearTimeout(timeout);
-            timeout = setTimeout(() => fetchStocks(1), 300);
-        });
-    }
-
-    // expose a global fetchStocks so inline onclick pagination buttons still work
-    window.fetchStocks = fetchStocks;
-
-    // initial fetch immediately
-    try { fetchStocks(1); } catch (e) { console.error(e); }
-})();
+    // first fetch on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchStocks(1);
+        attachDeleteEvents();
+    });
 </script>
+
+
+

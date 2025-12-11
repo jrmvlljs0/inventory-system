@@ -61,7 +61,7 @@
                             </thead>
 
                             <tbody  id="product-table-body" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                                @forelse($products as $product)
+                                {{-- @forelse($products as $product)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
@@ -102,7 +102,7 @@
                                             No products found.
                                         </td>
                                     </tr>
-                                @endforelse
+                                @endforelse --}}
                             </tbody>
                         </table>
                     </div>
@@ -132,6 +132,7 @@
 </div>
 
 </x-app-layout>
+
 
 <script>
     // get search input element
@@ -185,16 +186,18 @@
             let last = res.data.pagination.last_page;
 
             if (last > 1) {
-                // Previous
-                pagination += `<button class="px-3 py-1 border rounded ${current===1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===1 ? 'disabled' : 'onclick="fetchProducts('+(current-1)+')"'}>Previous</button>`;
-
+                //previous
+                if (current > 1) {
+                    pagination += `<button class="px-3 py-1 rounded bg-blue-600 text-white bg-gray-600 text-white hover:bg-gray-500" onclick="fetchProducts(${current - 1})">Previous</button>`;
+                }
                 // Pages
                 for (let i = 1; i <= last; i++) {
-                    pagination += `<button class="px-3 py-1 border rounded ${i===current ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}" onclick="fetchProducts(${i})">${i}</button>`;
+                    pagination += `<button class="px-3 py-1 rounded ${i===current ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white hover:bg-gray-500'}" onclick="fetchProducts(${i})">${i}</button>`;
                 }
-
                 // Next
-                pagination += `<button class="px-3 py-1 border rounded ${current===last ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}" ${current===last ? 'disabled' : 'onclick="fetchProducts('+(current+1)+')"'}>Next</button>`;
+                if (current < last) {
+                    pagination += `<button class="px-3 py-1 rounded bg-blue-600 text-white bg-gray-600 text-white hover:bg-gray-500" onclick="fetchProducts(${current + 1})">Next</button>`;
+                }   
             }
 
             document.getElementById('pagination-links').innerHTML = pagination;
