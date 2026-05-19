@@ -11,10 +11,10 @@
                         <h2 class="mb-4 text-lg text-white font-semibold">Add New Product</h2>
                         <a href="{{ route('products.index') }}"
                             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Back</a>
-
                     </div>
                     <div class="p-6">
                         <div class="mb-4">
+
                             <label for="name" class="text-white block text-sm font-medium mb-1">Product Name</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
                                 class="text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring ">

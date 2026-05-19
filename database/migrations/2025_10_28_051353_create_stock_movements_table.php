@@ -17,6 +17,13 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('reason');
             $table->timestamps();
+
+            // Indexes
+            $table->index('product_id');
+            $table->index('quantity');
+            $table->index('created_at');
+            $table->index('updated_at');
+        
         });
     }
 
